@@ -1,0 +1,25 @@
+import React, { useEffect } from 'react';
+import { useEventStore } from '../store/useEventStore';
+import EventCard from './EventCard';
+
+const EventsPage: React.FC = () => {
+  const { events, loading, error, fetchEvents } = useEventStore();
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      <h1>Events</h1>
+      <div className="events-grid">
+        {events.map(event => (
+          <EventCard key={event._id} event={event} />
+        ))}
+      </div>
+    </div>
+  );
+};
