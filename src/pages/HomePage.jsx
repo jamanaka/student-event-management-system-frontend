@@ -1,6 +1,6 @@
 import Footer from "../components/common/Footer";
 import Navbar from "../components/common/Navbar";
-import '../css/index.css'
+import '../css/Index.css'
 import '../css/HomePage.css'
 
 export default function Homepage() {
