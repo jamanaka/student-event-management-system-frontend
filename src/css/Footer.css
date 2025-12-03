@@ -224,7 +224,7 @@
   .newsletter-signup {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    padding: 20px;
+    padding: 8px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -238,12 +238,13 @@
   
   .newsletter-form {
     display: flex;
+    flex-direction: column;
     gap: 10px;
   }
   
   .newsletter-input {
     flex: 1;
-    padding: 12px 16px;
+    padding: 10px 16px;
     border: none;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.9);
