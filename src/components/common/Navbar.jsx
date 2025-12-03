@@ -136,7 +136,7 @@ const Navbar = () => {
             <Link to="/login" className="btn btn-outline">
               Login
             </Link>
-            <button onClick={handleGetStarted} className="btn btn-primary">
+            <button onClick={handleGetStarted} className="btn btn-register">
               Get Started
             </button>
           </div>

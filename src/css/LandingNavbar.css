@@ -126,14 +126,14 @@
     color: white;
   }
   
-  .btn-primary {
+  .btn-register {
     background: linear-gradient(135deg, #4a69bd 0%, #6a89cc 100%);
     color: white;
     border: none;
-    padding: 11px 30px;
+    padding: 12px 30px;
   }
   
-  .btn-primary:hover {
+  .btn-register:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(74, 105, 189, 0.4);
   }
