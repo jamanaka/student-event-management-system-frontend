@@ -1,6 +1,6 @@
-import React from 'react';
-import '../../css/HomeHero.css';
-import { Calendar, Users, Trophy, Sparkles } from 'lucide-react';
+import React from "react";
+import "../../css/HomeHero.css";
+import { Calendar, Users, Trophy, Sparkles } from "lucide-react";
 
 const HomeHero = () => {
   return (
@@ -9,25 +9,26 @@ const HomeHero = () => {
         <div className="hero-gradient"></div>
         <div className="hero-pattern"></div>
       </div>
-      
+
       <div className="hero-container">
         <div className="hero-content">
           <div className="hero-badge">
             <Sparkles className="sparkle-icon" />
             <span>University Event Management</span>
           </div>
-          
+
           <h1 className="hero-title">
             Where <span className="highlight">Student Events</span>
             <br />
             Come to <span className="highlight">Life</span>
           </h1>
-          
+
           <p className="hero-subtitle">
-            Discover, organize, and participate in campus events all in one place. 
-            From academic seminars to cultural festivals, never miss out on the campus experience.
+            Discover, organize, and participate in campus events all in one
+            place. From academic seminars to cultural festivals, never miss out
+            on the campus experience.
           </p>
-          
+
           <div className="hero-actions">
             <button className="btn-primary">
               <Calendar className="btn-icon" />
@@ -39,7 +40,7 @@ const HomeHero = () => {
             </button>
           </div>
         </div>
-        
+
         {/* <div className="hero-stats">
           <div className="stat-card">
             <div className="stat-icon">
@@ -71,7 +72,7 @@ const HomeHero = () => {
             </div>
           </div>
         </div> */}
-        
+
         <div className="hero-features">
           <div className="feature">
             <div className="feature-icon">
@@ -82,7 +83,7 @@ const HomeHero = () => {
             <h4 className="feature-title">Easy Registration</h4>
             <p className="feature-desc">One-click signup for any event</p>
           </div>
-          
+
           <div className="feature">
             <div className="feature-icon">
               <div className="icon-circle">
@@ -92,7 +93,7 @@ const HomeHero = () => {
             <h4 className="feature-title">Team Collaboration</h4>
             <p className="feature-desc">Create teams and manage members</p>
           </div>
-          
+
           <div className="feature">
             <div className="feature-icon">
               <div className="icon-circle">
@@ -102,7 +103,7 @@ const HomeHero = () => {
             <h4 className="feature-title">Win Prizes</h4>
             <p className="feature-desc">Compete for amazing rewards</p>
           </div>
-          
+
           <div className="feature">
             <div className="feature-icon">
               <div className="icon-circle">
