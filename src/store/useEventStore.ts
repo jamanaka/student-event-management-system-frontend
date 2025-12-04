@@ -46,14 +46,14 @@ export const useEventStore = create<EventState>((set, get) => ({
   fetchEvents: async (filters?: EventFilters) => {
     const currentFilters = { ...get().filters, ...filters };
     set({ loading: true, error: null, filters: currentFilters });
-    
+
     try {
       const response = await eventService.getEvents(currentFilters);
-      
+
       if (response.success && response.data) {
-        set({ 
+        set({
           events: response.data.data || [],
-          loading: false 
+          loading: false
         });
       } else {
         set({ error: response.message || 'Failed to fetch events', loading: false });
@@ -69,14 +69,14 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Fetch single event by ID
   fetchEventById: async (id: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.getEventById(id);
-      
+
       if (response.success && response.data) {
-        set({ 
+        set({
           selectedEvent: response.data,
-          loading: false 
+          loading: false
         });
       } else {
         set({ error: response.message || 'Event not found', loading: false });
@@ -92,14 +92,14 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Fetch pending events (admin only)
   fetchPendingEvents: async () => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.getPendingEvents();
-      
+
       if (response.success && response.data) {
-        set({ 
+        set({
           pendingEvents: response.data || [],
-          loading: false 
+          loading: false
         });
       } else {
         set({ error: response.message || 'Failed to fetch pending events', loading: false });
@@ -115,14 +115,14 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Fetch user's events
   fetchUserEvents: async (status?: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.getUserEvents(status);
-      
+
       if (response.success && response.data) {
-        set({ 
+        set({
           userEvents: response.data || [],
-          loading: false 
+          loading: false
         });
       } else {
         set({ error: response.message || 'Failed to fetch your events', loading: false });
@@ -138,10 +138,10 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Create new event
   createEvent: async (data: CreateEventFormData) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.createEvent(data);
-      
+
       if (response.success && response.data) {
         set((state) => ({
           events: [response.data!, ...state.events],
@@ -166,17 +166,17 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Update event
   updateEvent: async (id: string, data: Partial<Event>) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.updateEvent(id, data);
-      
+
       if (response.success && response.data) {
         set((state) => ({
           events: state.events.map(event =>
             event._id === id ? response.data! : event
           ),
-          selectedEvent: state.selectedEvent?._id === id 
-            ? response.data! 
+          selectedEvent: state.selectedEvent?._id === id
+            ? response.data!
             : state.selectedEvent,
           userEvents: state.userEvents.map(event =>
             event._id === id ? response.data! : event
@@ -201,10 +201,10 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Delete event
   deleteEvent: async (id: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.deleteEvent(id);
-      
+
       if (response.success) {
         set((state) => ({
           events: state.events.filter(event => event._id !== id),
@@ -231,10 +231,10 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Approve event (admin only)
   approveEvent: async (id: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.approveEvent(id);
-      
+
       if (response.success && response.data) {
         set((state) => ({
           pendingEvents: state.pendingEvents.filter(event => event._id !== id),
@@ -259,10 +259,10 @@ export const useEventStore = create<EventState>((set, get) => ({
   // Reject event (admin only)
   rejectEvent: async (id: string, rejectionReason: string) => {
     set({ loading: true, error: null });
-    
+
     try {
       const response = await eventService.rejectEvent(id, rejectionReason);
-      
+
       if (response.success && response.data) {
         set((state) => ({
           pendingEvents: state.pendingEvents.filter(event => event._id !== id),
@@ -284,12 +284,12 @@ export const useEventStore = create<EventState>((set, get) => ({
   },
 
   // Clear events
-  clearEvents: () => set({ 
-    events: [], 
+  clearEvents: () => set({
+    events: [],
     selectedEvent: null,
     pendingEvents: [],
     userEvents: [],
-    error: null 
+    error: null
   }),
 
   // Clear error
