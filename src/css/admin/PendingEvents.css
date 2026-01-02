@@ -1,0 +1,193 @@
+.admin-pending-events-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-page-header {
+  margin-bottom: 32px;
+}
+
+.admin-page-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.admin-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.admin-pending-event-card-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-pending-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.admin-btn-approve,
+.admin-btn-reject {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-btn-approve {
+  background-color: #10b981;
+  color: white;
+}
+
+.admin-btn-approve:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.admin-btn-reject {
+  background-color: #ef4444;
+  color: white;
+}
+
+.admin-btn-reject:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.admin-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.admin-empty-state h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 24px 0 8px 0;
+}
+
+.admin-empty-state p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.admin-reject-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-modal-text {
+  font-size: 16px;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.admin-required {
+  color: #ef4444;
+}
+
+.admin-form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.admin-form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.admin-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.admin-btn-cancel,
+.admin-btn-reject-submit {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-btn-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.admin-btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.admin-btn-reject-submit {
+  background-color: #ef4444;
+  color: white;
+}
+
+.admin-btn-reject-submit:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.admin-btn-reject-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .admin-events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-modal-actions {
+    flex-direction: column;
+  }
+
+  .admin-btn-cancel,
+  .admin-btn-reject-submit {
+    width: 100%;
+  }
+}
+

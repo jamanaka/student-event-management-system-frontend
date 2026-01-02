@@ -1,8 +1,25 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/useAuthStore";
 import "../../css/HomeHero.css";
 import { Calendar, Users, Trophy, Sparkles } from "lucide-react";
 
 const HomeHero = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+
+  const handleExploreEvents = () => {
+    navigate('/events');
+  };
+
+  const handleCreateEvent = () => {
+    if (isAuthenticated) {
+      navigate('/events/create');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <section className="home-hero">
       <div className="hero-background">
@@ -30,11 +47,11 @@ const HomeHero = () => {
           </p>
 
           <div className="hero-actions">
-            <button className="btn-primary">
+            <button className="btn-primary" onClick={handleExploreEvents}>
               <Calendar className="btn-icon" />
               Explore Events
             </button>
-            <button className="btn-secondary">
+            <button className="btn-secondary" onClick={handleCreateEvent}>
               <Users className="btn-icon" />
               Create Event
             </button>

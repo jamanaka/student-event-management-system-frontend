@@ -21,6 +21,11 @@ export const authService = {
     return axiosInstance.post('/auth/verify-otp', { email, otpCode });
   },
 
+  // Resend OTP
+  async resendOTP(email: string): Promise<ApiResponse> {
+    return axiosInstance.post('/auth/resend-otp', { email });
+  },
+
   // Login
   async login(data: LoginFormData): Promise<ApiResponse<{ 
     token: string; 
@@ -55,9 +60,8 @@ export const authService = {
     return axiosInstance.post('/auth/refresh-token', { refreshToken });
   },
 
-  // Logout (client-side)
-  logout(): void {
-    // This just clears local storage, backend doesn't need to know
-    localStorage.removeItem('auth-storage');
+  // Logout
+  async logout(): Promise<ApiResponse> {
+    return axiosInstance.post('/auth/logout');
   }
 };

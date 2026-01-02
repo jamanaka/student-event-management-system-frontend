@@ -3,6 +3,14 @@ import type { Event, EventFilters, CreateEventFormData } from '../lib/type';
 import { eventService } from '../services/event.service';
 import { toastError, toastSuccess } from '../lib/toast';
 
+// Request deduplication map
+const pendingRequests = new Map<string, Promise<any>>();
+
+// Helper function to create request key
+const createRequestKey = (method: string, params?: any): string => {
+  return `${method}:${JSON.stringify(params || {})}`;
+};
+
 interface EventState {
   events: Event[];
   selectedEvent: Event | null;
@@ -11,6 +19,12 @@ interface EventState {
   loading: boolean;
   error: string | null;
   filters: EventFilters;
+  pagination: {
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    count: number;
+  };
 
   // Actions with API calls
   fetchEvents: (filters?: EventFilters) => Promise<void>;
@@ -41,52 +55,102 @@ export const useEventStore = create<EventState>((set, get) => ({
     status: 'approved',
     sort: 'date',
   },
+  pagination: {
+    total: 0,
+    totalPages: 1,
+    currentPage: 1,
+    count: 0,
+  },
 
   // Fetch events with API call
   fetchEvents: async (filters?: EventFilters) => {
     const currentFilters = { ...get().filters, ...filters };
-    set({ loading: true, error: null, filters: currentFilters });
-
-    try {
-      const response = await eventService.getEvents(currentFilters);
-
-      if (response.success && response.data) {
-        set({
-          events: response.data.data || [],
-          loading: false
-        });
-      } else {
-        set({ error: response.message || 'Failed to fetch events', loading: false });
-        toastError(response.message || 'Failed to fetch events');
-      }
-    } catch (error: any) {
-      const errorMsg = error.error?.message || 'Failed to fetch events';
-      set({ error: errorMsg, loading: false });
-      toastError(errorMsg);
+    const requestKey = createRequestKey('fetchEvents', currentFilters);
+    
+    // Check if request is already pending
+    if (pendingRequests.has(requestKey)) {
+      return pendingRequests.get(requestKey);
     }
+
+    // Create new request
+    const requestPromise = (async () => {
+      set({ loading: true, error: null, filters: currentFilters });
+
+      try {
+        const response = await eventService.getEvents(currentFilters);
+
+        if (response.success) {
+          // Backend returns: { success: true, data: events[], total, totalPages, currentPage, count }
+          // After axios interceptor, response is already response.data from axios
+          const eventsData = response.data || [];
+          const paginationData = {
+            total: response.total || 0,
+            totalPages: response.totalPages || 1,
+            currentPage: response.currentPage || currentFilters.page || 1,
+            count: typeof response.count === 'number'
+              ? response.count
+              : (Array.isArray(eventsData) ? eventsData.length : 0),
+          };
+
+          set({
+            events: Array.isArray(eventsData) ? eventsData : [],
+            loading: false,
+            pagination: paginationData
+          });
+        } else {
+          set({ error: response.message || 'Failed to fetch events', loading: false });
+          toastError(response.message || 'Failed to fetch events');
+        }
+      } catch (error: any) {
+        const errorMsg = error.error?.message || error.message || 'Failed to fetch events';
+        set({ error: errorMsg, loading: false });
+        toastError(errorMsg);
+      } finally {
+        // Remove from pending requests
+        pendingRequests.delete(requestKey);
+      }
+    })();
+
+    // Store pending request
+    pendingRequests.set(requestKey, requestPromise);
+    return requestPromise;
   },
 
   // Fetch single event by ID
   fetchEventById: async (id: string) => {
-    set({ loading: true, error: null });
-
-    try {
-      const response = await eventService.getEventById(id);
-
-      if (response.success && response.data) {
-        set({
-          selectedEvent: response.data,
-          loading: false
-        });
-      } else {
-        set({ error: response.message || 'Event not found', loading: false });
-        toastError(response.message || 'Event not found');
-      }
-    } catch (error: any) {
-      const errorMsg = error.error?.message || 'Failed to fetch event';
-      set({ error: errorMsg, loading: false });
-      toastError(errorMsg);
+    const requestKey = createRequestKey('fetchEventById', { id });
+    
+    // Check if request is already pending
+    if (pendingRequests.has(requestKey)) {
+      return pendingRequests.get(requestKey);
     }
+
+    const requestPromise = (async () => {
+      set({ loading: true, error: null });
+
+      try {
+        const response = await eventService.getEventById(id);
+
+        if (response.success && response.data) {
+          set({
+            selectedEvent: response.data,
+            loading: false
+          });
+        } else {
+          set({ error: response.message || 'Event not found', loading: false });
+          toastError(response.message || 'Event not found');
+        }
+      } catch (error: any) {
+        const errorMsg = error.error?.message || 'Failed to fetch event';
+        set({ error: errorMsg, loading: false });
+        toastError(errorMsg);
+      } finally {
+        pendingRequests.delete(requestKey);
+      }
+    })();
+
+    pendingRequests.set(requestKey, requestPromise);
+    return requestPromise;
   },
 
   // Fetch pending events (admin only)

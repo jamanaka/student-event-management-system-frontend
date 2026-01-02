@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
-import "../../css/LandingNavbar.css";
+import "../../css/common/LandingNavbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();

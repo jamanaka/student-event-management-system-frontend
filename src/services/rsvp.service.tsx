@@ -7,12 +7,12 @@ export const rsvpService = {
     numberOfGuests?: number; 
     dietaryPreferences?: string 
   }): Promise<ApiResponse<RSVP>> {
-    return axiosInstance.post(`/events/${eventId}/rsvp`, data);
+    return axiosInstance.post(`/rsvp/${eventId}`, data);
   },
 
   // Remove RSVP
   async removeRSVP(eventId: string): Promise<ApiResponse> {
-    return axiosInstance.delete(`/events/${eventId}/rsvp`);
+    return axiosInstance.delete(`/rsvp/${eventId}`);
   },
 
   // Get event attendees
@@ -26,7 +26,7 @@ export const rsvpService = {
     totalPages: number;
     currentPage: number;
   }>> {
-    return axiosInstance.get(`/events/${eventId}/rsvp/attendees`, { params });
+    return axiosInstance.get(`/rsvp/event/${eventId}/attendees`, { params });
   },
 
   // Get user's RSVPs
@@ -49,7 +49,7 @@ export const rsvpService = {
     hasRSVPed: boolean;
     rsvp: RSVP | null;
   }>> {
-    return axiosInstance.get(`/events/${eventId}/rsvp`);
+    return axiosInstance.get(`/rsvp/check/${eventId}`);
   },
 
   // Update RSVP
@@ -57,6 +57,6 @@ export const rsvpService = {
     numberOfGuests?: number; 
     dietaryPreferences?: string 
   }): Promise<ApiResponse<RSVP>> {
-    return axiosInstance.put(`/events/${eventId}/rsvp`, data);
+    return axiosInstance.put(`/rsvp/${eventId}`, data);
   }
 };

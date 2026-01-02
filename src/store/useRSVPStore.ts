@@ -8,8 +8,20 @@ interface RSVPState {
   eventAttendees: Record<string, RSVP[]>; // Attendees by event ID
   loading: boolean;
   error: string | null;
+  pagination: {
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    count: number;
+  };
+  attendeesPagination: Record<string, {
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    count: number;
+  }>;
 
-  // Actions with API calls
+  // Actions with API calls 
   fetchUserRSVPs: (params?: {
     page?: number;
     limit?: number;
@@ -47,6 +59,13 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
   eventAttendees: {},
   loading: false,
   error: null,
+  pagination: {
+    total: 0,
+    totalPages: 1,
+    currentPage: 1,
+    count: 0,
+  },
+  attendeesPagination: {},
 
   // Fetch user's RSVPs
   fetchUserRSVPs: async (params = {}) => {
@@ -58,6 +77,12 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
       if (response.success && response.data) {
         set({
           rsvps: response.data.data || [],
+          pagination: {
+            total: response.data.total || 0,
+            totalPages: response.data.totalPages || 1,
+            currentPage: response.data.currentPage || 1,
+            count: response.data.count || 0,
+          },
           loading: false
         });
       } else {
@@ -83,6 +108,15 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
           eventAttendees: {
             ...state.eventAttendees,
             [eventId]: response.data!.data || []
+          },
+          attendeesPagination: {
+            ...state.attendeesPagination,
+            [eventId]: {
+              total: response.data!.total || 0,
+              totalPages: response.data!.totalPages || 1,
+              currentPage: response.data!.currentPage || 1,
+              count: response.data!.count || 0,
+            }
           },
           loading: false
         }));

@@ -1,5 +1,5 @@
 import React from "react";
-import "../../css/Footer.css";
+import "../../css/common/Footer.css";
 import { Link } from "react-router-dom";
 import {
   FaFacebookF,

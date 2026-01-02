@@ -16,7 +16,8 @@ interface AuthState {
   login: (data: LoginFormData) => Promise<void>;
   register: (data: RegisterFormData) => Promise<ApiResponse>;
   verifyOTP: (email: string, otpCode: string) => Promise<void>;
-  logout: () => void;
+  resendOTP: (email: string) => Promise<void>;
+  logout: () => Promise<void>;
   loadUser: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
   updateToken: (accessToken: string) => void; // ADD THIS METHOD
@@ -56,7 +57,17 @@ export const useAuthStore = create<AuthState>()(
             toastError(response.message || 'Login failed');
           }
         } catch (error: any) {
-          const errorMsg = error.error?.message || 'Login failed';
+          // Handle validation errors with details
+          let errorMsg = error.error?.message || 'Login failed';
+          
+          // If there are validation details, format them nicely
+          if (error.error?.details && Array.isArray(error.error.details)) {
+            const validationMessages = error.error.details
+              .map((detail: any) => detail.message)
+              .join('. ');
+            errorMsg = validationMessages || errorMsg;
+          }
+          
           set({ error: errorMsg, isLoading: false });
           toastError(errorMsg);
         }
@@ -78,7 +89,17 @@ export const useAuthStore = create<AuthState>()(
 
           return response;
         } catch (error: any) {
-          const errorMsg = error.error?.message || 'Registration failed';
+          // Handle validation errors with details
+          let errorMsg = error.error?.message || 'Registration failed';
+          
+          // If there are validation details, format them nicely
+          if (error.error?.details && Array.isArray(error.error.details)) {
+            const validationMessages = error.error.details
+              .map((detail: any) => detail.message)
+              .join('. ');
+            errorMsg = validationMessages || errorMsg;
+          }
+          
           set({ error: errorMsg, isLoading: false });
           toastError(errorMsg);
           throw error;
@@ -109,6 +130,26 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error: any) {
           const errorMsg = error.error?.message || 'OTP verification failed';
+          set({ error: errorMsg, isLoading: false });
+          toastError(errorMsg);
+        }
+      },
+
+      // Resend OTP with API call
+      resendOTP: async (email: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.resendOTP(email);
+
+          if (response.success) {
+            toastSuccess('OTP resent successfully! Please check your email.');
+            set({ isLoading: false });
+          } else {
+            set({ error: response.message || 'Failed to resend OTP', isLoading: false });
+            toastError(response.message || 'Failed to resend OTP');
+          }
+        } catch (error: any) {
+          const errorMsg = error.error?.message || 'Failed to resend OTP';
           set({ error: errorMsg, isLoading: false });
           toastError(errorMsg);
         }
@@ -163,17 +204,23 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // Logout
-      logout: () => {
-        authService.logout();
-        set({
-          user: null,
-          accessToken: null,
-          refreshToken: null,
-          isAuthenticated: false,
-          isLoading: false,
-          error: null,
-        });
-        toastInfo('Logged out successfully');
+      logout: async () => {
+        try {
+          await authService.logout();
+        } catch (error) {
+          // Even if logout fails on backend, clear local state
+          console.error('Logout error:', error);
+        } finally {
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+          });
+          toastInfo('Logged out successfully');
+        }
       },
 
       // Clear error

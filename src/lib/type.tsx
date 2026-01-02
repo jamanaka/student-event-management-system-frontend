@@ -123,6 +123,7 @@ export interface CreateEventFormData {
 
 // Filter Types
 export interface EventFilters {
+  upcoming?: boolean | string;
   category?: string;
   status?: string;
   page?: number;
