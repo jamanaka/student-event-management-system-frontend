@@ -69,27 +69,102 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
 
   // Fetch user's RSVPs
   fetchUserRSVPs: async (params = {}) => {
+    console.log('[RSVP Store] fetchUserRSVPs called with params:', params);
     set({ loading: true, error: null });
 
     try {
       const response = await rsvpService.getUserRSVPs(params);
+      console.log('[RSVP Store] Full response received:', response);
+      console.log('[RSVP Store] Response type check:', {
+        success: response.success,
+        hasData: !!response.data,
+        dataType: typeof response.data,
+        isArray: Array.isArray(response.data),
+        isObject: typeof response.data === 'object' && response.data !== null,
+        dataKeys: response.data && typeof response.data === 'object' && !Array.isArray(response.data) ? Object.keys(response.data) : [],
+        directArrayLength: Array.isArray(response.data) ? response.data.length : 'N/A',
+        nestedDataExists: !!(response.data && typeof response.data === 'object' && !Array.isArray(response.data) && 'data' in response.data),
+        nestedDataIsArray: Array.isArray((response.data as any)?.data),
+        nestedDataLength: Array.isArray((response.data as any)?.data) ? (response.data as any).data.length : 0,
+        total: (response.data as any)?.total || 0,
+        count: (response.data as any)?.count || 0,
+        firstItem: Array.isArray((response.data as any)?.data) ? (response.data as any).data[0] : (Array.isArray(response.data) ? response.data[0] : 'N/A')
+      });
 
-      if (response.success && response.data) {
-        set({
-          rsvps: response.data.data || [],
-          pagination: {
-            total: response.data.total || 0,
-            totalPages: response.data.totalPages || 1,
-            currentPage: response.data.currentPage || 1,
-            count: response.data.count || 0,
-          },
-          loading: false
-        });
-      } else {
-        set({ error: response.message || 'Failed to fetch RSVPs', loading: false });
-        toastError(response.message || 'Failed to fetch RSVPs');
+      // Handle response structure: { success: true, data: [...], total: 2, ... }
+      // Axios interceptor already unwraps response.data, so response is the backend's JSON
+      let rsvpsData: any[] = [];
+      let paginationData = {
+        total: 0,
+        totalPages: 1,
+        currentPage: 1,
+        count: 0
+      };
+
+      if (response.success) {
+        // Backend returns: { success: true, data: [...], total: 2, count: 2, ... }
+        // Axios interceptor returns response.data, so response = { success: true, data: [...], total: 2, ... }
+        // So response.data should be the array directly
+        const responseData = response.data as any;
+        
+        if (Array.isArray(responseData)) {
+          // Data is directly an array (after axios interceptor unwraps)
+          rsvpsData = responseData;
+          paginationData = {
+            total: (response as any).total || responseData.length,
+            totalPages: (response as any).totalPages || 1,
+            currentPage: (response as any).currentPage || 1,
+            count: (response as any).count || responseData.length,
+          };
+        } else if (responseData && typeof responseData === 'object' && Array.isArray(responseData.data)) {
+          // Data is nested: { data: [...], total: ... } (if interceptor didn't unwrap)
+          rsvpsData = responseData.data;
+          paginationData = {
+            total: responseData.total || 0,
+            totalPages: responseData.totalPages || 1,
+            currentPage: responseData.currentPage || 1,
+            count: responseData.count || 0,
+          };
+        } else {
+          // Check if response itself has data property at top level
+          // Backend returns: { success: true, data: [...], total: 2, ... }
+          // After axios interceptor unwraps: response = { success: true, data: [...], total: 2, ... }
+          // So response.data might be the array, or response itself might have the data
+          const responseAny = response as any;
+          if (responseAny.data && Array.isArray(responseAny.data)) {
+            rsvpsData = responseAny.data;
+            paginationData = {
+              total: responseAny.total || 0,
+              totalPages: responseAny.totalPages || 1,
+              currentPage: responseAny.currentPage || 1,
+              count: responseAny.count || 0,
+            };
+          } else {
+            console.warn('[RSVP Store] Unexpected response structure:', response);
+            rsvpsData = [];
+          }
+        }
       }
+
+      console.log('[RSVP Store] Extracted RSVPs:', {
+        count: rsvpsData.length,
+        rsvps: rsvpsData.map(r => ({
+          id: r?._id || r?.id,
+          eventId: typeof r?.event === 'string' ? r.event : r?.event?._id || r?.event?.id,
+          eventTitle: typeof r?.event === 'string' ? 'STRING' : r?.event?.title,
+          hasEvent: !!r?.event,
+          numberOfGuests: r?.numberOfGuests
+        }))
+      });
+      
+      set({
+        rsvps: rsvpsData,
+        pagination: paginationData,
+        loading: false
+      });
+      console.log('[RSVP Store] RSVPs set successfully, count:', rsvpsData.length);
     } catch (error: any) {
+      console.error('[RSVP Store] Error fetching RSVPs:', error);
       const errorMsg = error.error?.message || 'Failed to fetch RSVPs';
       set({ error: errorMsg, loading: false });
       toastError(errorMsg);

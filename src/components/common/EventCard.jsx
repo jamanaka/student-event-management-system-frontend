@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, Clock, CheckCircle } from 'lucide-react';
 import { useRSVPStore } from '../../store/useRSVPStore';
@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useEventStore } from '../../store/useEventStore';
 import '../../css/users/EventCard.css';
 
-const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate }) => {
+const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { addRSVP, removeRSVP, checkRSVPStatus, loading: rsvpLoading } = useRSVPStore();
@@ -55,11 +55,21 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
     return colors[category] || colors.other;
   };
 
-  const isPastEvent = new Date(`${event.date}T${event.time || '00:00'}`) < new Date();
-  const isFull = event.currentAttendees >= event.capacity;
-  const canRSVP = !isPastEvent && event.status === 'approved' && !isFull;
+  const isPastEvent = useMemo(() => {
+    return new Date(`${event.date}T${event.time || '00:00'}`) < new Date();
+  }, [event.date, event.time]);
+  
+  const isFull = useMemo(() => {
+    return event.currentAttendees >= event.capacity;
+  }, [event.currentAttendees, event.capacity]);
+  
+  const canRSVP = useMemo(() => {
+    return !isPastEvent && event.status === 'approved' && !isFull;
+  }, [isPastEvent, event.status, isFull]);
 
   const checkUserRSVPStatus = useCallback(async () => {
+    if (skipRSVPCheck) return;
+    
     setIsCheckingRSVP(true);
     try {
       const eventId = event._id || event.id;
@@ -74,14 +84,14 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
     } finally {
       setIsCheckingRSVP(false);
     }
-  }, [event._id, event.id, checkRSVPStatus]);
+  }, [event._id, event.id, checkRSVPStatus, skipRSVPCheck]);
 
   // Check RSVP status when component mounts or event changes
   useEffect(() => {
-    if (isAuthenticated && canRSVP) {
+    if (!skipRSVPCheck && isAuthenticated && canRSVP) {
       checkUserRSVPStatus();
     }
-  }, [isAuthenticated, canRSVP, checkUserRSVPStatus]);
+  }, [isAuthenticated, canRSVP, checkUserRSVPStatus, skipRSVPCheck]);
 
   const handleJoinEvent = async (e) => {
     e.preventDefault();
@@ -89,6 +99,12 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
     if (!isAuthenticated) {
       navigate('/login');
+      return;
+    }
+
+    // If already joined, navigate to event details instead of canceling
+    if (hasRSVPed) {
+      navigate(`/events/${event._id || event.id}`);
       return;
     }
 
@@ -102,34 +118,16 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
     // Convert to string if needed
     const eventIdString = String(eventId);
 
-    if (hasRSVPed) {
-      // Cancel RSVP
-      const confirmed = window.confirm('Are you sure you want to cancel your RSVP?');
-      if (confirmed) {
-        const success = await removeRSVP(eventIdString);
-        if (success) {
-          setHasRSVPed(false);
-          // Refresh events if callback provided
-          if (onEventUpdate) {
-            onEventUpdate();
-          } else {
-            // Try to refresh events from store
-            fetchEvents({ page: 1, limit: 12, status: 'approved', upcoming: true });
-          }
-        }
-      }
-    } else {
-      // Add RSVP (without guests for quick join)
-      const success = await addRSVP(eventIdString, { numberOfGuests: 0 });
-      if (success) {
-        setHasRSVPed(true);
-        // Refresh events if callback provided
-        if (onEventUpdate) {
-          onEventUpdate();
-        } else {
-          // Try to refresh events from store
-          fetchEvents({ page: 1, limit: 12, status: 'approved', upcoming: true });
-        }
+    // Add RSVP (without guests for quick join)
+    const success = await addRSVP(eventIdString, { numberOfGuests: 0 });
+    if (success) {
+      setHasRSVPed(true);
+      // Refresh events if callback provided
+      if (onEventUpdate) {
+        onEventUpdate();
+      } else {
+        // Try to refresh events from store
+        fetchEvents({ page: 1, limit: 12, status: 'approved', upcoming: true });
       }
     }
   };
@@ -162,9 +160,9 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
         </Link>
 
         <p className="event-card-description">
-          {event.description.length > 120 
+          {event.description && event.description.length > 120 
             ? `${event.description.substring(0, 120)}...` 
-            : event.description}
+            : event.description || 'No description available'}
         </p>
 
         <div className="event-card-info">

@@ -19,21 +19,109 @@ const MyRSVPsPage = () => {
   const [rsvpToCancel, setRsvpToCancel] = React.useState(null);
 
   useEffect(() => {
-    fetchUserRSVPs({ status: 'upcoming' });
-  }, []);
+    console.log('[MyRSVPsPage] Component mounted, fetching RSVPs');
+    // Fetch all RSVPs (both upcoming and past) by not specifying status
+    // The backend will return all, and we'll filter on the frontend
+    fetchUserRSVPs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only fetch once on mount
+
+  useEffect(() => {
+    console.log('[MyRSVPsPage] RSVPs state changed:', {
+      rsvpsCount: rsvps.length,
+      loading,
+      rsvps: rsvps.map(r => ({
+        id: r._id,
+        eventId: typeof r.event === 'string' ? r.event : r.event?._id,
+        eventTitle: typeof r.event === 'string' ? 'STRING' : r.event?.title,
+        hasEvent: !!r.event,
+        numberOfGuests: r.numberOfGuests
+      }))
+    });
+  }, [rsvps, loading]);
+
+  // Helper function to parse event date correctly
+  const parseEventDateTime = (event) => {
+    if (!event || !event.date) return null;
+    
+    let eventDate = event.date;
+    
+    // Handle Date object
+    if (eventDate instanceof Date) {
+      const year = eventDate.getFullYear();
+      const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+      const day = String(eventDate.getDate()).padStart(2, '0');
+      eventDate = `${year}-${month}-${day}`;
+    } 
+    // Handle string date
+    else if (typeof eventDate === 'string') {
+      // Extract just the date part (YYYY-MM-DD)
+      eventDate = eventDate.split('T')[0].split(' ')[0];
+    }
+    
+    // Combine with time
+    const time = event.time || '00:00';
+    const eventDateTime = new Date(`${eventDate}T${time}`);
+    
+    if (isNaN(eventDateTime.getTime())) {
+      console.error('[MyRSVPsPage] Invalid date created:', { 
+        eventId: event._id, 
+        originalDate: event.date, 
+        formattedDate: eventDate, 
+        time: event.time 
+      });
+      return null;
+    }
+    
+    return eventDateTime;
+  };
 
   const upcomingRSVPs = rsvps.filter(rsvp => {
     const event = typeof rsvp.event === 'string' ? null : rsvp.event;
-    if (!event) return false;
-    const eventDate = new Date(`${event.date}T${event.time || '00:00'}`);
-    return eventDate > new Date();
+    if (!event) {
+      console.log('[MyRSVPsPage] Filtering out RSVP with no event:', rsvp._id);
+      return false;
+    }
+    const eventDateTime = parseEventDateTime(event);
+    if (!eventDateTime) return false;
+    
+    const now = new Date();
+    const isUpcoming = eventDateTime > now;
+    console.log('[MyRSVPsPage] Upcoming filter:', { 
+      rsvpId: rsvp._id, 
+      eventTitle: event.title, 
+      eventDateTime, 
+      now, 
+      isUpcoming 
+    });
+    return isUpcoming;
   });
 
   const pastRSVPs = rsvps.filter(rsvp => {
     const event = typeof rsvp.event === 'string' ? null : rsvp.event;
-    if (!event) return true;
-    const eventDate = new Date(`${event.date}T${event.time || '00:00'}`);
-    return eventDate < new Date();
+    if (!event) {
+      console.log('[MyRSVPsPage] Filtering out RSVP with no event (past):', rsvp._id);
+      return false;
+    }
+    const eventDateTime = parseEventDateTime(event);
+    if (!eventDateTime) return false;
+    
+    const now = new Date();
+    const isPast = eventDateTime < now;
+    console.log('[MyRSVPsPage] Past filter:', { 
+      rsvpId: rsvp._id, 
+      eventTitle: event.title, 
+      eventDateTime, 
+      now, 
+      isPast 
+    });
+    return isPast;
+  });
+
+  console.log('[MyRSVPsPage] Filtered results:', {
+    upcomingCount: upcomingRSVPs.length,
+    pastCount: pastRSVPs.length,
+    totalRSVPs: rsvps.length
   });
 
   const handleCancelRSVP = async () => {
@@ -79,7 +167,7 @@ const MyRSVPsPage = () => {
                     if (!event) return null;
                     return (
                       <div key={rsvp._id} className="rsvp-card-wrapper">
-                        <EventCard event={event} showStatus={false} />
+                        <EventCard event={event} showStatus={false} skipRSVPCheck={true} />
                         <div className="rsvp-actions">
                           {rsvp.numberOfGuests > 0 && (
                             <div className="rsvp-details">
@@ -112,7 +200,7 @@ const MyRSVPsPage = () => {
                     const event = typeof rsvp.event === 'string' ? null : rsvp.event;
                     if (!event) return null;
                     return (
-                      <EventCard key={rsvp._id} event={event} showStatus={false} />
+                      <EventCard key={rsvp._id} event={event} showStatus={false} skipRSVPCheck={true} />
                     );
                   })}
                 </div>

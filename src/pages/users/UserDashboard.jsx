@@ -161,7 +161,7 @@ const UserDashboard = () => {
                   const event = typeof rsvp.event === 'string' ? null : rsvp.event;
                   if (!event) return null;
                   return (
-                    <EventCard key={rsvp._id} event={event} showStatus={true} />
+                    <EventCard key={rsvp._id} event={event} showStatus={true} skipRSVPCheck={true} />
                   );
                 })}
               </div>
