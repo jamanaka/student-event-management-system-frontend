@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import './LoginPage.css';
 
-const ForgotPasswordPage = () => {
+const ForgotPasswordPage = () => { 
   const navigate = useNavigate();
   const { isLoading } = useAuthStore();
   const [email, setEmail] = useState('');
@@ -45,7 +45,7 @@ const ForgotPasswordPage = () => {
     if (!otpCode || otpCode.length !== 6) {
       setError('Please enter a valid 6-digit OTP code');
       return;
-    }
+    } 
 
     try {
       // TODO: Implement OTP verification
@@ -196,8 +196,8 @@ const ForgotPasswordPage = () => {
                 <div className="form-group">
                   <label htmlFor="newPassword">New Password</label>
                   <input
-                    type="password"
-                    id="newPassword"
+                    type="password"  
+                    id="newPassword" 
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
