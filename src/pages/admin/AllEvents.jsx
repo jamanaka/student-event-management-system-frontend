@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
 import Spinner from '../../components/common/Spinner';

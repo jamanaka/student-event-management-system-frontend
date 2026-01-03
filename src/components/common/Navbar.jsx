@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { FaGraduationCap } from "react-icons/fa";
 import "../../css/common/LandingNavbar.css";
 
 const Navbar = () => {
@@ -101,7 +102,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="landing-navbar-brand">
             <Link to="/" className="landing-navbar-logo">
-              <span className="logo-icon">🎓</span>
+              <span className="logo-icon"><FaGraduationCap size={24} /></span>
               <span className="logo-text">CampusEvents</span>
             </Link>
           </div>
@@ -257,7 +258,9 @@ const Navbar = () => {
               color: "#2d3436",
             }}
           >
-            <span style={{ fontSize: "1.8rem" }}>🎓</span>
+            <span style={{ fontSize: "1.8rem" }}>
+              <FaGraduationCap size={28} />
+            </span>
             <span>CampusEvents</span>
           </div>
         </div>

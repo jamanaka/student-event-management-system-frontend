@@ -184,11 +184,13 @@
   }
   
   .footer-link::before {
-    content: '🎯';
+    content: '→';
     position: absolute;
     left: -20px;
     opacity: 0;
     transition: all 0.3s ease;
+    color: #667eea;
+    font-weight: bold;
   }
   
   .footer-link:hover::before {

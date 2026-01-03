@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import "../../css/HomeHero.css";
 import { Calendar, Users, Trophy, Sparkles } from "lucide-react";

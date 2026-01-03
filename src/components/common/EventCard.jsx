@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, Clock, CheckCircle, Image } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, CheckCircle, Image, XCircle } from 'lucide-react';
 import { useRSVPStore } from '../../store/useRSVPStore';
 import { useAuthStore, useIsAdmin } from '../../store/useAuthStore';
 import { useEventStore } from '../../store/useEventStore';
 import '../../css/users/EventCard.css';
 
-const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false, adminView = false }) => {
+const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false, adminView = false, showCancelRSVP = false, onCancelRSVP, numberOfGuests = 0 }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const isAdmin = useIsAdmin();
@@ -218,38 +218,67 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
         {!showActions && (
           <div className="event-card-footer">
-            {canRSVP && canUserRSVP && isAuthenticated ? (
-              <button
-                onClick={handleJoinEvent}
-                className={`event-card-join-btn ${hasRSVPed ? 'joined' : ''}`}
-                disabled={rsvpLoading || isCheckingRSVP}
-              >
-                {rsvpLoading || isCheckingRSVP ? (
-                  'Loading...'
-                ) : hasRSVPed ? (
-                  <>
-                    <CheckCircle size={16} />
-                    Joined
-                  </>
-                ) : (
-                  'Join Event'
+            {showCancelRSVP && onCancelRSVP ? (
+              <>
+                {numberOfGuests > 0 && (
+                  <div className="rsvp-guests-info">
+                    <Users size={14} />
+                    <span><strong>{numberOfGuests}</strong> guest{numberOfGuests !== 1 ? 's' : ''}</span>
+                  </div>
                 )}
-              </button>
-            ) : canRSVP && canUserRSVP && !isAuthenticated ? (
-              <Link 
-                to="/login"
-                className="event-card-join-btn"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Login to Join
-              </Link>
-            ) : null}
-            <Link 
-              to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`}
-              className="event-card-view-btn"
-            >
-              View Details
-            </Link>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCancelRSVP();
+                  }}
+                  className="event-card-cancel-rsvp-btn"
+                >
+                  <XCircle size={16} />
+                  Cancel RSVP
+                </button>
+                <Link 
+                  to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`}
+                  className="event-card-view-btn"
+                >
+                  View Details
+                </Link>
+              </>
+            ) : (
+              <>
+                {canRSVP && canUserRSVP && isAuthenticated ? (
+                  <button
+                    onClick={handleJoinEvent}
+                    className={`event-card-join-btn ${hasRSVPed ? 'joined' : ''}`}
+                    disabled={rsvpLoading || isCheckingRSVP}
+                  >
+                    {rsvpLoading || isCheckingRSVP ? (
+                      'Loading...'
+                    ) : hasRSVPed ? (
+                      <>
+                        <CheckCircle size={16} />
+                        Joined
+                      </>
+                    ) : (
+                      'Join Event'
+                    )}
+                  </button>
+                ) : canRSVP && canUserRSVP && !isAuthenticated ? (
+                  <Link 
+                    to="/login"
+                    className="event-card-join-btn"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Login to Join
+                  </Link>
+                ) : null}
+                <Link 
+                  to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`}
+                  className="event-card-view-btn"
+                >
+                  View Details
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>

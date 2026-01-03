@@ -12,6 +12,7 @@ import {
   Bell,
   User
 } from 'lucide-react';
+import { FaGraduationCap } from 'react-icons/fa';
 import { useAuthStore } from '../../store/useAuthStore';
 import '../../css/common/DashboardLayout.css';
 
@@ -55,7 +56,7 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
       <aside className={`dashboard-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <Link to={isAdmin ? '/admin/dashboard' : '/users/dashboard'} className="sidebar-logo">
-            <span className="logo-icon">🎓</span>
+            <span className="logo-icon"><FaGraduationCap size={24} /></span>
             <span className="logo-text">CampusEvents</span>
           </Link>
         </div>

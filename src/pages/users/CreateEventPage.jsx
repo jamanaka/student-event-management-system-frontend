@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import { useEventStore } from '../../store/useEventStore';
 import '../../css/users/CreateEventPage.css';

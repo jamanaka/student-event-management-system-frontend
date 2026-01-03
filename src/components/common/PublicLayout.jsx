@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore, useIsAuthenticated } from '../../store/useAuthStore';
+import { FaGraduationCap } from 'react-icons/fa';
 import '../../css/common/PublicLayout.css';
 
 const PublicLayout = ({ children, title }) => {
@@ -12,7 +13,7 @@ const PublicLayout = ({ children, title }) => {
       <header className="public-header">
         <div className="public-header-container">
           <Link to="/" className="public-logo">
-            <span className="logo-icon">🎓</span>
+            <span className="logo-icon"><FaGraduationCap size={24} /></span>
             <span className="logo-text">CampusEvents</span>
           </Link>
           

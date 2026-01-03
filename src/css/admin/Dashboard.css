@@ -177,10 +177,6 @@
   background: #fff;
 }
 
-/* .admin-stat-warning::before {
-  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-} */
-
 .admin-stat-warning .admin-stat-icon {
   background: #fef3c7;
   border-color: #fde68a;
@@ -194,10 +190,6 @@
   background: #fff;
 }
 
-/* .admin-stat-success::before {
-  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-} */
-
 .admin-stat-success .admin-stat-icon {
   background: #d1fae5;
   border-color: #a7f3d0;
@@ -210,10 +202,6 @@
 .admin-stat-info {
   background: #fff;
 }
-
-/* .admin-stat-info::before {
-  background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
-} */
 
 .admin-stat-info .admin-stat-icon {
   background: #ede9fe;

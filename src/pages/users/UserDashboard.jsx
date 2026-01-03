@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, PlusCircle, Clock, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
-import Spinner from '../../components/common/Spinner';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { useEventStore } from '../../store/useEventStore';
 import { useRSVPStore } from '../../store/useRSVPStore';

@@ -8,8 +8,6 @@ import {
   Mail, 
   Phone, 
   ArrowLeft,
-  Edit,
-  Trash2,
   Image
 } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';

@@ -200,6 +200,8 @@
   gap: 8px;
   padding-top: 16px;
   border-top: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .event-card-join-btn {
@@ -256,6 +258,45 @@
   background-color: #5568d3;
 }
 
+.rsvp-guests-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #5b21b6;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.event-card-cancel-rsvp-btn {
+  flex: 1;
+  padding: 10px 16px;
+  text-align: center;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  text-decoration: none;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.event-card-cancel-rsvp-btn:hover {
+  background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+
 @media (max-width: 768px) {
   .event-card-content {
     padding: 16px;
@@ -263,6 +304,16 @@
 
   .event-card-title {
     font-size: 18px;
+  }
+
+  .event-card-footer {
+    flex-direction: column;
+  }
+
+  .rsvp-guests-info,
+  .event-card-cancel-rsvp-btn,
+  .event-card-view-btn {
+    width: 100%;
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -11,8 +11,7 @@ import {
   UserX,
   Activity,
   BarChart3,
-  ArrowUpRight,
-  ArrowDownRight
+  ArrowUpRight
 } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
@@ -40,12 +39,6 @@ const AdminDashboard = () => {
     fetchSystemStats
   } = useAdminStore();
 
-  const [localStats, setLocalStats] = useState({
-    totalEvents: 0,
-    pendingCount: 0,
-    totalAttendees: 0,
-    upcomingEvents: 0,
-  });
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -58,21 +51,6 @@ const AdminDashboard = () => {
     loadDashboardData();
   }, []);
 
-  useEffect(() => {
-    const upcoming = events.filter(event => {
-      const eventDate = new Date(`${event.date}T${event.time || '00:00'}`);
-      return eventDate > new Date() && event.status === 'approved';
-    });
-
-    const totalAttendees = events.reduce((sum, event) => sum + (event.currentAttendees || 0), 0);
-
-    setLocalStats({
-      totalEvents: events.length,
-      pendingCount: pendingEvents.length,
-      totalAttendees,
-      upcomingEvents: upcoming.length,
-    });
-  }, [events, pendingEvents]);
 
   const handleApprove = async (eventId) => {
     const success = await approveEvent(eventId);

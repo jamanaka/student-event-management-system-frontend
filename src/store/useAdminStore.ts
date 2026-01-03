@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { adminService } from '../services/admin.service';
-import type { User, ApiResponse } from '../lib/type';
+import type { User } from '../lib/type';
 import type { UserFilters, SystemStats, UserWithStats } from '../services/admin.service';
 import { toastError, toastSuccess } from '../lib/toast';
 

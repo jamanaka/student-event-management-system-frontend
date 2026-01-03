@@ -14,6 +14,9 @@ import {
   FaMapMarkerAlt,
   FaPhone,
   FaEnvelope,
+  FaTrophy,
+  FaLock,
+  FaGraduationCap,
 } from "react-icons/fa";
 
 const Footer = () => {
@@ -244,9 +247,18 @@ const Footer = () => {
           </div>
 
           <div className="footer-badges">
-            <span className="badge">🏆 #1 Student Event Platform</span>
-            <span className="badge">🔒 SSL Secured</span>
-            <span className="badge">🎓 100+ Campuses</span>
+            <span className="badge">
+              <FaTrophy size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+              #1 Student Event Platform
+            </span>
+            <span className="badge">
+              <FaLock size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+              SSL Secured
+            </span>
+            <span className="badge">
+              <FaGraduationCap size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+              100+ Campuses
+            </span>
           </div>
         </div>
       </div>
