@@ -52,6 +52,8 @@ export interface Event {
   description: string;
   date: string;
   time: string;
+  endDate: string;
+  endTime: string;
   location: string;
   category: 'academic' | 'social' | 'sports' | 'cultural' | 'career' | 'workshop' | 'other';
   status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'completed';

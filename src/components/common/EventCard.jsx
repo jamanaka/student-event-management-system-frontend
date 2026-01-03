@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, Clock, CheckCircle, Image, XCircle } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, CheckCircle, Image, XCircle, PlayCircle } from 'lucide-react';
 import { useRSVPStore } from '../../store/useRSVPStore';
 import { useAuthStore, useIsAdmin } from '../../store/useAuthStore';
 import { useEventStore } from '../../store/useEventStore';
@@ -12,7 +12,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
   const isAdmin = useIsAdmin();
   const { addRSVP, checkRSVPStatus, loading: rsvpLoading } = useRSVPStore();
   const { fetchEvents } = useEventStore();
-  const [hasRSVPed, setHasRSVPed] = useState(false);
+  const [hasRSVPed, setHasRSVPed] = useState(skipRSVPCheck);
   const [isCheckingRSVP, setIsCheckingRSVP] = useState(false);
   
   // Admins should not be able to RSVP
@@ -59,17 +59,90 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
     return colors[category] || colors.other;
   };
 
+  // Parse date string helper
+  const parseDateString = useCallback((dateValue) => {
+    if (!dateValue) return null;
+    if (dateValue instanceof Date) {
+      const year = dateValue.getFullYear();
+      const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+      const day = String(dateValue.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } else if (typeof dateValue === 'string') {
+      return dateValue.split('T')[0].split(' ')[0];
+    }
+    return null;
+  }, []);
+
   const isPastEvent = useMemo(() => {
-    return new Date(`${event.date}T${event.time || '00:00'}`) < new Date();
-  }, [event.date, event.time]);
+    // Use status field - if event is completed, it's past
+    if (event.status === 'completed') return true;
+    
+    // If status is cancelled, treat as past
+    if (event.status === 'cancelled') return true;
+    
+    // Check end date/time if available
+    if (event.endDate && event.endTime) {
+      const endDateStr = parseDateString(event.endDate);
+      if (endDateStr) {
+        const endDateTime = new Date(`${endDateStr}T${event.endTime}`);
+        const now = new Date();
+        return endDateTime < now;
+      }
+    }
+    
+    // Fallback to start date/time if end date/time not available
+    if (event.date) {
+      const startDateStr = parseDateString(event.date);
+      if (startDateStr) {
+        const startDateTime = new Date(`${startDateStr}T${event.time || '00:00'}`);
+        const now = new Date();
+        return startDateTime < now;
+      }
+    }
+    
+    return false;
+  }, [event.date, event.time, event.endDate, event.endTime, event.status, parseDateString]);
+
+  const isOngoingEvent = useMemo(() => {
+    // Only check if event is approved (not pending, rejected, cancelled, or completed)
+    if (event.status !== 'approved') return false;
+    
+    // Can't be ongoing if it's past
+    if (isPastEvent) return false;
+    
+    const now = new Date();
+    
+    // Check if event has started
+    if (event.date && event.time) {
+      const startDateStr = parseDateString(event.date);
+      if (startDateStr) {
+        const startDateTime = new Date(`${startDateStr}T${event.time}`);
+        
+        // Check if event has ended
+        if (event.endDate && event.endTime) {
+          const endDateStr = parseDateString(event.endDate);
+          if (endDateStr) {
+            const endDateTime = new Date(`${endDateStr}T${event.endTime}`);
+            // Event is ongoing if current time is between start and end
+            return startDateTime <= now && now <= endDateTime;
+          }
+        }
+        
+        // If no end time, consider ongoing if start time has passed and status is approved
+        return startDateTime <= now;
+      }
+    }
+    
+    return false;
+  }, [event.date, event.time, event.endDate, event.endTime, event.status, isPastEvent, parseDateString]);
   
   const isFull = useMemo(() => {
     return event.currentAttendees >= event.capacity;
   }, [event.currentAttendees, event.capacity]);
   
   const canRSVP = useMemo(() => {
-    return !isPastEvent && event.status === 'approved' && !isFull;
-  }, [isPastEvent, event.status, isFull]);
+    return !isPastEvent && !isOngoingEvent && event.status === 'approved' && !isFull;
+  }, [isPastEvent, isOngoingEvent, event.status, isFull]);
 
   const checkUserRSVPStatus = useCallback(async () => {
     if (skipRSVPCheck) return;
@@ -153,15 +226,19 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
       <div className="event-card-content">
         {showStatus && (
           <div className="event-card-header">
-            <span className={`status-badge ${getStatusBadgeClass(event.status)}`}>
-              {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-            </span>
-            <span 
-              className="category-badge"
-              style={{ backgroundColor: getCategoryColor(event.category) }}
-            >
-              {event.category}
-            </span>
+            {event.status && (
+              <span className={`status-badge ${getStatusBadgeClass(event.status)}`}>
+                {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+              </span>
+            )}
+            {event.category && (
+              <span 
+                className="category-badge"
+                style={{ backgroundColor: getCategoryColor(event.category) }}
+              >
+                {event.category}
+              </span>
+            )}
           </div>
         )}
 
@@ -245,35 +322,49 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
               </>
             ) : (
               <>
-                {canRSVP && canUserRSVP && isAuthenticated ? (
-                  <button
-                    onClick={handleJoinEvent}
-                    className={`event-card-join-btn ${hasRSVPed ? 'joined' : ''}`}
-                    disabled={rsvpLoading || isCheckingRSVP}
-                  >
-                    {rsvpLoading || isCheckingRSVP ? (
-                      'Loading...'
-                    ) : hasRSVPed ? (
-                      <>
-                        <CheckCircle size={16} />
-                        Joined
-                      </>
-                    ) : (
-                      'Join Event'
-                    )}
-                  </button>
-                ) : canRSVP && canUserRSVP && !isAuthenticated ? (
-                  <Link 
-                    to="/login"
-                    className="event-card-join-btn"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Login to Join
-                  </Link>
-                ) : null}
+                {isPastEvent ? (
+                  <div className="event-card-past-label">
+                    <Clock size={16} />
+                    <span>Past Event</span>
+                  </div>
+                ) : isOngoingEvent ? (
+                  <div className="event-card-ongoing-label">
+                    <PlayCircle size={16} />
+                    <span>Ongoing Event</span>
+                  </div>
+                ) : (
+                  <>
+                    {canRSVP && canUserRSVP && isAuthenticated ? (
+                      <button
+                        onClick={handleJoinEvent}
+                        className={`event-card-join-btn ${hasRSVPed ? 'joined' : ''}`}
+                        disabled={rsvpLoading || isCheckingRSVP}
+                      >
+                        {rsvpLoading || isCheckingRSVP ? (
+                          'Loading...'
+                        ) : hasRSVPed ? (
+                          <>
+                            <CheckCircle size={16} />
+                            Joined
+                          </>
+                        ) : (
+                          'Join Event'
+                        )}
+                      </button>
+                    ) : canRSVP && canUserRSVP && !isAuthenticated ? (
+                      <Link 
+                        to="/login"
+                        className="event-card-join-btn"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Login to Join
+                      </Link>
+                    ) : null}
+                  </>
+                )}
                 <Link 
                   to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`}
-                  className="event-card-view-btn"
+                  className={`event-card-view-btn ${isPastEvent || isOngoingEvent ? 'full-width' : ''}`}
                 >
                   View Details
                 </Link>

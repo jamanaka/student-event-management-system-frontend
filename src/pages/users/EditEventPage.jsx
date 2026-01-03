@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import Spinner from '../../components/common/Spinner';
 import { useEventStore } from '../../store/useEventStore';
@@ -16,6 +16,8 @@ const EditEventPage = () => {
     description: '',
     date: '',
     time: '',
+    endDate: '',
+    endTime: '',
     location: '',
     category: '',
     capacity: 10,
@@ -44,18 +46,25 @@ const EditEventPage = () => {
 
   useEffect(() => {
     if (selectedEvent) {
-      // Format date for input
-      const date = new Date(selectedEvent.date);
-      const formattedDate = date.toISOString().split('T')[0];
+      // Format start date for input
+      const startDate = new Date(selectedEvent.date);
+      const formattedStartDate = startDate.toISOString().split('T')[0];
+      
+      // Format end date for input
+      const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
+      const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : '';
       
       // Format time for input (HH:MM)
-      const timeValue = selectedEvent.time || '';
+      const startTimeValue = selectedEvent.time || '';
+      const endTimeValue = selectedEvent.endTime || '';
       
       setFormData({
         title: selectedEvent.title || '',
         description: selectedEvent.description || '',
-        date: formattedDate,
-        time: timeValue,
+        date: formattedStartDate,
+        time: startTimeValue,
+        endDate: formattedEndDate,
+        endTime: endTimeValue,
         location: selectedEvent.location || '',
         category: selectedEvent.category || '',
         capacity: selectedEvent.capacity || 10,
@@ -86,8 +95,10 @@ const EditEventPage = () => {
     if (formData.description.trim().length < 50) {
       newErrors.description = 'Description must be at least 50 characters';
     }
-    if (!formData.date) newErrors.date = 'Date is required';
-    if (!formData.time) newErrors.time = 'Time is required';
+    if (!formData.date) newErrors.date = 'Start date is required';
+    if (!formData.time) newErrors.time = 'Start time is required';
+    if (!formData.endDate) newErrors.endDate = 'End date is required';
+    if (!formData.endTime) newErrors.endTime = 'End time is required';
     if (!formData.location.trim()) newErrors.location = 'Location is required';
     if (!formData.category) newErrors.category = 'Category is required';
     if (!formData.capacity || formData.capacity < 1) {
@@ -97,6 +108,25 @@ const EditEventPage = () => {
       newErrors.contactEmail = 'Contact email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
       newErrors.contactEmail = 'Invalid email format';
+    }
+
+    // End date/time validation
+    if (formData.endDate && formData.endTime) {
+      if (formData.date && formData.time) {
+        const startDateTime = new Date(`${formData.date}T${formData.time}`);
+        const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
+        const minDurationMs = 15 * 60 * 1000; // 15 minutes in milliseconds
+        const timeDifference = endDateTime - startDateTime;
+        
+        if (timeDifference < minDurationMs) {
+          newErrors.endDate = 'End date and time must be at least 15 minutes after start date and time';
+          newErrors.endTime = 'End date and time must be at least 15 minutes after start date and time';
+        }
+      }
+      
+      if (formData.date && formData.endDate < formData.date) {
+        newErrors.endDate = 'End date cannot be before start date';
+      }
     }
 
     setErrors(newErrors);
@@ -235,12 +265,16 @@ const EditEventPage = () => {
             </div>
 
             <div className="form-section">
-              <h2 className="section-title">Date & Location</h2>
+              <h2 className="section-title">
+                <Calendar size={20} />
+                Date & Location
+              </h2>
 
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="date" className="form-label">
-                    Date <span className="required">*</span>
+                    <Calendar size={16} />
+                    Start Date <span className="required">*</span>
                   </label>
                   <input
                     type="date"
@@ -256,7 +290,8 @@ const EditEventPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="time" className="form-label">
-                    Time <span className="required">*</span>
+                    <Clock size={16} />
+                    Start Time <span className="required">*</span>
                   </label>
                   <input
                     type="time"
@@ -268,6 +303,43 @@ const EditEventPage = () => {
                     required
                   />
                   {errors.time && <span className="error-message">{errors.time}</span>}
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="endDate" className="form-label">
+                    <Calendar size={16} />
+                    End Date <span className="required">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                    className={`form-input ${errors.endDate ? 'error' : ''}`}
+                    min={formData.date || ''}
+                    required
+                  />
+                  {errors.endDate && <span className="error-message">{errors.endDate}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="endTime" className="form-label">
+                    <Clock size={16} />
+                    End Time <span className="required">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    id="endTime"
+                    name="endTime"
+                    value={formData.endTime}
+                    onChange={handleChange}
+                    className={`form-input ${errors.endTime ? 'error' : ''}`}
+                    required
+                  />
+                  {errors.endTime && <span className="error-message">{errors.endTime}</span>}
                 </div>
               </div>
 

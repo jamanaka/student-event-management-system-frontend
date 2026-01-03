@@ -240,6 +240,30 @@
   background-color: #2563eb;
 }
 
+.event-card-past-label,
+.event-card-ongoing-label {
+  flex: 1;
+  padding: 10px 16px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.event-card-past-label {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.event-card-ongoing-label {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
 .event-card-view-btn {
   flex: 1;
   padding: 10px 20px;
@@ -252,6 +276,10 @@
   font-size: 14px;
   transition: all 0.2s ease;
   display: block;
+}
+
+.event-card-view-btn.full-width {
+  flex: 1 1 100%;
 }
 
 .event-card-view-btn:hover {
