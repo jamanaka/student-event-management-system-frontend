@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
       ? "http://localhost:5000/api"
-      : `${process.env.NEXT_PUBLIC_API_BASE_URL_PROD}/api`,
+      : `${process.env.REACT_APP_API_BASE_URL_PROD}/api`,
   withCredentials: true,
   timeout: 30000,
   headers: {
