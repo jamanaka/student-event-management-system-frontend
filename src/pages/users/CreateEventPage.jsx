@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Mail, Phone, Image as ImageIcon, Sparkles, FileText, Users, Clock } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import { useEventStore } from '../../store/useEventStore';
+import { FaBook, FaBirthdayCake, FaFutbol, FaTheaterMasks, FaBriefcase, FaTools, FaStar } from 'react-icons/fa';
 import '../../css/users/CreateEventPage.css';
 
 const CreateEventPage = () => {
@@ -25,13 +26,13 @@ const CreateEventPage = () => {
   const [errors, setErrors] = useState({});
 
   const categories = [
-    { value: 'academic', label: 'Academic' },
-    { value: 'social', label: 'Social' },
-    { value: 'sports', label: 'Sports' },
-    { value: 'cultural', label: 'Cultural' },
-    { value: 'career', label: 'Career' },
-    { value: 'workshop', label: 'Workshop' },
-    { value: 'other', label: 'Other' },
+    { value: 'academic', label: 'Academic', icon: FaBook, color: '#3b82f6' },
+    { value: 'social', label: 'Social', icon: FaBirthdayCake, color: '#ec4899' },
+    { value: 'sports', label: 'Sports', icon: FaFutbol, color: '#10b981' },
+    { value: 'cultural', label: 'Cultural', icon: FaTheaterMasks, color: '#f59e0b' },
+    { value: 'career', label: 'Career', icon: FaBriefcase, color: '#8b5cf6' },
+    { value: 'workshop', label: 'Workshop', icon: FaTools, color: '#06b6d4' },
+    { value: 'other', label: 'Other', icon: FaStar, color: '#6b7280' },
   ];
 
   const handleChange = (e) => {
@@ -109,7 +110,10 @@ const CreateEventPage = () => {
 
           <form onSubmit={handleSubmit} className="event-form">
             <div className="form-section">
-              <h2 className="section-title">Basic Information</h2>
+              <h2 className="section-title">
+                <FileText size={20} />
+                Basic Information
+              </h2>
 
               <div className="form-group">
                 <label htmlFor="title" className="form-label">
@@ -153,26 +157,40 @@ const CreateEventPage = () => {
                   <label htmlFor="category" className="form-label">
                     Category <span className="required">*</span>
                   </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    className={`form-select ${errors.category ? 'error' : ''}`}
-                    required
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map(cat => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="category-select-wrapper">
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                      className={`form-select ${errors.category ? 'error' : ''}`}
+                      required
+                      style={{
+                        color: formData.category ? categories.find(c => c.value === formData.category)?.color || '#1f2937' : '#6b7280'
+                      }}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map(cat => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                    {formData.category && (
+                      <div 
+                        className="category-select-icon"
+                        style={{ color: categories.find(c => c.value === formData.category)?.color }}
+                      >
+                        {React.createElement(categories.find(c => c.value === formData.category)?.icon || FaStar, { size: 18 })}
+                      </div>
+                    )}
+                  </div>
                   {errors.category && <span className="error-message">{errors.category}</span>}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="capacity" className="form-label">
+                    <Users size={16} />
                     Capacity <span className="required">*</span>
                   </label>
                   <input
@@ -191,11 +209,15 @@ const CreateEventPage = () => {
             </div>
 
             <div className="form-section">
-              <h2 className="section-title">Date & Location</h2>
+              <h2 className="section-title">
+                <Calendar size={20} />
+                Date & Location
+              </h2>
 
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="date" className="form-label">
+                    <Calendar size={16} />
                     Date <span className="required">*</span>
                   </label>
                   <input
@@ -213,6 +235,7 @@ const CreateEventPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="time" className="form-label">
+                    <Clock size={16} />
                     Time <span className="required">*</span>
                   </label>
                   <input
@@ -230,6 +253,7 @@ const CreateEventPage = () => {
 
               <div className="form-group">
                 <label htmlFor="location" className="form-label">
+                  <MapPin size={16} />
                   Location <span className="required">*</span>
                 </label>
                 <input
@@ -247,11 +271,15 @@ const CreateEventPage = () => {
             </div>
 
             <div className="form-section">
-              <h2 className="section-title">Contact Information</h2>
+              <h2 className="section-title">
+                <Mail size={20} />
+                Contact Information
+              </h2>
 
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="contactEmail" className="form-label">
+                    <Mail size={16} />
                     Contact Email <span className="required">*</span>
                   </label>
                   <input
@@ -269,6 +297,7 @@ const CreateEventPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="contactPhone" className="form-label">
+                    <Phone size={16} />
                     Contact Phone (Optional)
                   </label>
                   <input
@@ -285,10 +314,14 @@ const CreateEventPage = () => {
             </div>
 
             <div className="form-section">
-              <h2 className="section-title">Event Image (Optional)</h2>
+              <h2 className="section-title">
+                <ImageIcon size={20} />
+                Event Image (Optional)
+              </h2>
 
               <div className="form-group">
                 <label htmlFor="imageUrl" className="form-label">
+                  <ImageIcon size={16} />
                   Image URL
                 </label>
                 <input
@@ -303,6 +336,22 @@ const CreateEventPage = () => {
                 <p className="field-hint">
                   Provide a direct link to an image for your event
                 </p>
+                {formData.imageUrl && (
+                  <div className="image-preview">
+                    <img 
+                      src={formData.imageUrl} 
+                      alt="Event preview" 
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="image-preview-error" style={{ display: 'none' }}>
+                      <ImageIcon size={32} />
+                      <span>Invalid image URL</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -320,7 +369,17 @@ const CreateEventPage = () => {
                 className="btn-submit"
                 disabled={loading}
               >
-                {loading ? 'Creating...' : 'Create Event'}
+                {loading ? (
+                  <>
+                    <span className="btn-spinner"></span>
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    Create Event
+                  </>
+                )}
               </button>
             </div>
           </form>

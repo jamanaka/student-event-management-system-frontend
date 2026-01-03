@@ -139,15 +139,6 @@ const MyEventsPage = () => {
                 <div className="stat-mini-label">Upcoming</div>
               </div>
             </div>
-            <div className="stat-card-mini stat-attendees">
-              <div className="stat-mini-icon">
-                <Users size={20} />
-              </div>
-              <div className="stat-mini-content">
-                <div className="stat-mini-value">{stats.totalAttendees}</div>
-                <div className="stat-mini-label">Total Attendees</div>
-              </div>
-            </div>
           </div>
         )}
 
