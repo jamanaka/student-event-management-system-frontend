@@ -280,7 +280,7 @@ const AdminDashboard = () => {
               <div className="admin-events-grid">
                 {pendingEvents.slice(0, 3).map((event) => (
                   <div key={event._id} className="admin-pending-event-wrapper">
-                    <EventCard event={event} showStatus={true} />
+                    <EventCard event={event} showStatus={true} adminView={true} />
                     <div className="admin-pending-actions">
                       <button
                         onClick={() => handleApprove(event._id)}
@@ -326,7 +326,7 @@ const AdminDashboard = () => {
           ) : events.length > 0 ? (
             <div className="admin-events-grid">
               {events.slice(0, 6).map((event) => (
-                <EventCard key={event._id} event={event} showStatus={true} />
+                <EventCard key={event._id} event={event} showStatus={true} adminView={true} />
               ))}
             </div>
           ) : (

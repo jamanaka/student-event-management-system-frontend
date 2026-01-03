@@ -120,7 +120,7 @@ const AllEvents = () => {
         ) : events.length > 0 ? (
           <div className="admin-events-grid">
             {events.map((event) => (
-              <EventCard key={event._id} event={event} showStatus={true} />
+              <EventCard key={event._id} event={event} showStatus={true} adminView={true} />
             ))}
           </div>
         ) : (

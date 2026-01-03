@@ -25,12 +25,34 @@
   overflow: hidden;
   margin-bottom: 32px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
 }
 
 .event-header-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.event-header-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  color: #6b7280;
+  gap: 16px;
+}
+
+.event-header-image-placeholder svg {
+  opacity: 0.5;
+}
+
+.event-header-image-placeholder span {
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .event-details-content {

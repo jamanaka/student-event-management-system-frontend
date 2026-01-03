@@ -11,7 +11,8 @@ import {
   Edit,
   Trash2,
   CheckCircle,
-  XCircle
+  XCircle,
+  Image
 } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import PublicLayout from '../../components/common/PublicLayout';
@@ -19,13 +20,14 @@ import Spinner from '../../components/common/Spinner';
 import Modal from '../../components/common/Modal';
 import { useEventStore } from '../../store/useEventStore';
 import { useRSVPStore } from '../../store/useRSVPStore';
-import { useAuthStore } from '../../store/useAuthStore';
+import { useAuthStore, useIsAdmin } from '../../store/useAuthStore';
 import '../../css/users/EventDetailsPage.css';
 
 const EventDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
+  const isAdmin = useIsAdmin();
   const { 
     selectedEvent, 
     loading, 
@@ -44,6 +46,7 @@ const EventDetailsPage = () => {
   const [rsvpStatus, setRsvpStatus] = useState(null);
   const [showRSVPModal, setShowRSVPModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCancelRSVPModal, setShowCancelRSVPModal] = useState(false);
   const [rsvpData, setRsvpData] = useState({
     numberOfGuests: 0,
     dietaryPreferences: '',
@@ -95,17 +98,19 @@ const EventDetailsPage = () => {
     }
 
     if (hasRSVPed) {
-      const confirmed = window.confirm('Are you sure you want to cancel your RSVP?');
-      if (confirmed) {
-        const success = await removeRSVP(selectedEvent._id);
-        if (success) {
-          setHasRSVPed(false);
-          setRsvpStatus(null);
-          fetchEventById(id);
-        }
-      }
+      setShowCancelRSVPModal(true);
     } else {
       setShowRSVPModal(true);
+    }
+  };
+
+  const handleCancelRSVP = async () => {
+    const success = await removeRSVP(selectedEvent._id);
+    if (success) {
+      setHasRSVPed(false);
+      setRsvpStatus(null);
+      setShowCancelRSVPModal(false);
+      fetchEventById(id);
     }
   };
 
@@ -165,11 +170,16 @@ const EventDetailsPage = () => {
           Back to Events
         </Link>
 
-        {selectedEvent.imageUrl && (
-          <div className="event-header-image">
+        <div className="event-header-image">
+          {selectedEvent.imageUrl ? (
             <img src={selectedEvent.imageUrl} alt={selectedEvent.title} />
-          </div>
-        )}
+          ) : (
+            <div className="event-header-image-placeholder">
+              <Image size={64} />
+              <span>No Image Available</span>
+            </div>
+          )}
+        </div>
 
         <div className="event-details-content">
           <div className="event-main">
@@ -265,69 +275,86 @@ const EventDetailsPage = () => {
           </div>
 
           <div className="event-sidebar">
-            <div className="rsvp-card">
-              {isPastEvent ? (
+            {isAdmin ? (
+              <div className="rsvp-card">
                 <div className="rsvp-disabled">
-                  <p>This event has already ended</p>
+                  <p>Administrators cannot RSVP to events</p>
                 </div>
-              ) : isFull ? (
-                <div className="rsvp-disabled">
-                  <p>This event is full</p>
+                <div className="event-capacity-bar">
+                  <div className="capacity-fill" style={{ 
+                    width: `${Math.min((selectedEvent.currentAttendees / selectedEvent.capacity) * 100, 100)}%` 
+                  }} />
                 </div>
-              ) : selectedEvent.status !== 'approved' ? (
-                <div className="rsvp-disabled">
-                  <p>This event is not available for RSVP</p>
-                </div>
-              ) : (
-                <>
-                  {hasRSVPed ? (
-                    <div className="rsvp-confirmed">
-                      <CheckCircle size={24} color="#10b981" />
-                      <h3>You're attending!</h3>
-                      {rsvpStatus?.numberOfGuests > 0 && (
-                        <p>Guests: {rsvpStatus.numberOfGuests}</p>
-                      )}
-                      <button
-                        onClick={handleRSVP}
-                        className="btn-cancel-rsvp"
-                        disabled={rsvpLoading}
-                      >
-                        Cancel RSVP
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="rsvp-form">
-                      <h3>RSVP to this event</h3>
-                      <p className="rsvp-subtitle">
-                        Join {selectedEvent.currentAttendees || 0} other attendees
-                      </p>
-                      {!isAuthenticated ? (
-                        <Link to="/login" className="btn-rsvp">
-                          Login to RSVP
-                        </Link>
-                      ) : (
+                <p className="capacity-text">
+                  {selectedEvent.capacity - (selectedEvent.currentAttendees || 0)} spots remaining
+                </p>
+              </div>
+            ) : (
+              <div className="rsvp-card">
+                {isPastEvent ? (
+                  <div className="rsvp-disabled">
+                    <p>This event has already ended</p>
+                  </div>
+                ) : isFull ? (
+                  <div className="rsvp-disabled">
+                    <p>This event is full</p>
+                  </div>
+                ) : selectedEvent.status !== 'approved' ? (
+                  <div className="rsvp-disabled">
+                    <p>This event is not available for RSVP</p>
+                  </div>
+                ) : (
+                  <>
+                    {hasRSVPed ? (
+                      <div className="rsvp-confirmed">
+                        <CheckCircle size={24} color="#10b981" />
+                        <h3>You're attending!</h3>
+                        {rsvpStatus?.numberOfGuests > 0 && (
+                          <p>Guests: {rsvpStatus.numberOfGuests}</p>
+                        )}
                         <button
                           onClick={handleRSVP}
-                          className="btn-rsvp"
+                          className="btn-cancel-rsvp"
                           disabled={rsvpLoading}
                         >
-                          {rsvpLoading ? 'Processing...' : 'RSVP Now'}
+                          <XCircle size={16} />
+                          Cancel RSVP
                         </button>
-                      )}
-                    </div>
-                  )}
-                </>
-              )}
+                      </div>
+                    ) : (
+                      <div className="rsvp-form">
+                        <h3>RSVP to this event</h3>
+                        <p className="rsvp-subtitle">
+                          Join {selectedEvent.currentAttendees || 0} other attendees
+                        </p>
+                        {!isAuthenticated ? (
+                          <Link to="/login" className="btn-rsvp">
+                            Login to RSVP
+                          </Link>
+                        ) : (
+                          <button
+                            onClick={handleRSVP}
+                            className="btn-rsvp"
+                            disabled={rsvpLoading}
+                          >
+                            {rsvpLoading ? 'Processing...' : 'RSVP Now'}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
 
-              <div className="event-capacity-bar">
-                <div className="capacity-fill" style={{ 
-                  width: `${Math.min((selectedEvent.currentAttendees / selectedEvent.capacity) * 100, 100)}%` 
-                }} />
+                <div className="event-capacity-bar">
+                  <div className="capacity-fill" style={{ 
+                    width: `${Math.min((selectedEvent.currentAttendees / selectedEvent.capacity) * 100, 100)}%` 
+                  }} />
+                </div>
+                <p className="capacity-text">
+                  {selectedEvent.capacity - (selectedEvent.currentAttendees || 0)} spots remaining
+                </p>
               </div>
-              <p className="capacity-text">
-                {selectedEvent.capacity - (selectedEvent.currentAttendees || 0)} spots remaining
-              </p>
-            </div>
+            )}
           </div>
         </div>
 
@@ -380,6 +407,35 @@ const EventDetailsPage = () => {
                 disabled={rsvpLoading}
               >
                 Confirm RSVP
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Cancel RSVP Modal */}
+        <Modal
+          isOpen={showCancelRSVPModal}
+          onClose={() => setShowCancelRSVPModal(false)}
+          title="Cancel RSVP"
+        >
+          <div className="cancel-rsvp-modal">
+            <p>
+              Are you sure you want to cancel your RSVP for{' '}
+              <strong>{selectedEvent?.title}</strong>?
+            </p>
+            <div className="modal-actions">
+              <button
+                onClick={() => setShowCancelRSVPModal(false)}
+                className="btn-cancel"
+              >
+                Keep RSVP
+              </button>
+              <button
+                onClick={handleCancelRSVP}
+                className="btn-confirm-cancel"
+                disabled={rsvpLoading}
+              >
+                Yes, Cancel RSVP
               </button>
             </div>
           </div>

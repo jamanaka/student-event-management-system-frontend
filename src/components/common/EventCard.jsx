@@ -1,18 +1,22 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, Clock, CheckCircle } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, CheckCircle, Image } from 'lucide-react';
 import { useRSVPStore } from '../../store/useRSVPStore';
-import { useAuthStore } from '../../store/useAuthStore';
+import { useAuthStore, useIsAdmin } from '../../store/useAuthStore';
 import { useEventStore } from '../../store/useEventStore';
 import '../../css/users/EventCard.css';
 
-const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false }) => {
+const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false, adminView = false }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
-  const { addRSVP, removeRSVP, checkRSVPStatus, loading: rsvpLoading } = useRSVPStore();
+  const isAdmin = useIsAdmin();
+  const { addRSVP, checkRSVPStatus, loading: rsvpLoading } = useRSVPStore();
   const { fetchEvents } = useEventStore();
   const [hasRSVPed, setHasRSVPed] = useState(false);
   const [isCheckingRSVP, setIsCheckingRSVP] = useState(false);
+  
+  // Admins should not be able to RSVP
+  const canUserRSVP = !isAdmin && !adminView;
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -87,11 +91,12 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
   }, [event._id, event.id, checkRSVPStatus, skipRSVPCheck]);
 
   // Check RSVP status when component mounts or event changes
+  // Only check if user is not an admin
   useEffect(() => {
-    if (!skipRSVPCheck && isAuthenticated && canRSVP) {
+    if (!skipRSVPCheck && isAuthenticated && canRSVP && canUserRSVP) {
       checkUserRSVPStatus();
     }
-  }, [isAuthenticated, canRSVP, checkUserRSVPStatus, skipRSVPCheck]);
+  }, [isAuthenticated, canRSVP, canUserRSVP, checkUserRSVPStatus, skipRSVPCheck]);
 
   const handleJoinEvent = async (e) => {
     e.preventDefault();
@@ -104,7 +109,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
     // If already joined, navigate to event details instead of canceling
     if (hasRSVPed) {
-      navigate(`/events/${event._id || event.id}`);
+      navigate(adminView ? `/admin/events/${event._id || event.id}` : `/events/${event._id || event.id}`);
       return;
     }
 
@@ -134,11 +139,16 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
   return (
     <div className={`event-card ${isPastEvent ? 'past-event' : ''}`}>
-      {event.imageUrl && (
-        <div className="event-card-image">
+      <div className="event-card-image">
+        {event.imageUrl ? (
           <img src={event.imageUrl} alt={event.title} />
-        </div>
-      )}
+        ) : (
+          <div className="event-card-image-placeholder">
+            <Image size={48} />
+            <span>No Image Available</span>
+          </div>
+        )}
+      </div>
       
       <div className="event-card-content">
         {showStatus && (
@@ -155,7 +165,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
           </div>
         )}
 
-        <Link to={`/events/${event._id}`} className="event-card-title-link">
+        <Link to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`} className="event-card-title-link">
           <h3 className="event-card-title">{event.title}</h3>
         </Link>
 
@@ -208,7 +218,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
         {!showActions && (
           <div className="event-card-footer">
-            {canRSVP && isAuthenticated ? (
+            {canRSVP && canUserRSVP && isAuthenticated ? (
               <button
                 onClick={handleJoinEvent}
                 className={`event-card-join-btn ${hasRSVPed ? 'joined' : ''}`}
@@ -225,7 +235,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
                   'Join Event'
                 )}
               </button>
-            ) : canRSVP && !isAuthenticated ? (
+            ) : canRSVP && canUserRSVP && !isAuthenticated ? (
               <Link 
                 to="/login"
                 className="event-card-join-btn"
@@ -235,7 +245,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
               </Link>
             ) : null}
             <Link 
-              to={`/events/${event._id}`}
+              to={adminView ? `/admin/events/${event._id}` : `/events/${event._id}`}
               className="event-card-view-btn"
             >
               View Details

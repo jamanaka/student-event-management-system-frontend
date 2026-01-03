@@ -70,7 +70,7 @@ const PendingEvents = () => {
             <div className="admin-events-grid">
               {pendingEvents.map((event) => (
                 <div key={event._id} className="admin-pending-event-card-wrapper">
-                  <EventCard event={event} showStatus={true} />
+                  <EventCard event={event} showStatus={true} adminView={true} />
                   <div className="admin-pending-actions">
                     <button
                       onClick={() => handleApprove(event._id)}

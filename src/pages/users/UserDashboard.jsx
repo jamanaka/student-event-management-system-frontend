@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, PlusCircle, Clock, Users, TrendingUp } from 'lucide-react';
+import { Calendar, PlusCircle, Clock, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
 import Spinner from '../../components/common/Spinner';
@@ -70,6 +70,12 @@ const UserDashboard = () => {
               <p className="stat-label">UPCOMING EVENTS</p>
               <h3 className="stat-value">{stats.upcomingEvents}</h3>
               <p className="stat-status">Available to attend</p>
+              {stats.upcomingEvents > 0 && (
+                <div className="stat-badge">
+                  <Sparkles size={12} />
+                  <span>Browse & Join</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -80,7 +86,21 @@ const UserDashboard = () => {
             <div className="stat-content">
               <p className="stat-label">MY EVENTS</p>
               <h3 className="stat-value">{stats.myEvents}</h3>
-              <p className="stat-status">Events you created</p>
+              <div className="stat-details">
+                <span className="stat-detail-item">
+                  <CheckCircle size={14} />
+                  {stats.myEventsApproved} approved
+                </span>
+                {stats.myEventsPending > 0 && (
+                  <span className="stat-detail-item pending">
+                    <AlertCircle size={14} />
+                    {stats.myEventsPending} pending
+                  </span>
+                )}
+              </div>
+              <p className="stat-status">
+                {stats.totalAttendeesMyEvents} total attendees
+              </p>
             </div>
           </div>
 
@@ -91,7 +111,15 @@ const UserDashboard = () => {
             <div className="stat-content">
               <p className="stat-label">MY RSVPS</p>
               <h3 className="stat-value">{stats.myRSVPs}</h3>
-              <p className="stat-status">Events you're attending</p>
+              <p className="stat-status">
+                {stats.upcomingRSVPs} upcoming events
+              </p>
+              {stats.myRSVPs > 0 && (
+                <div className="stat-badge success">
+                  <CheckCircle size={12} />
+                  <span>Active</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -104,6 +132,10 @@ const UserDashboard = () => {
                 <p className="stat-label">CREATE EVENT</p>
                 <h3 className="stat-value">+</h3>
                 <p className="stat-status">Start organizing now</p>
+                <div className="stat-badge accent">
+                  <Sparkles size={12} />
+                  <span>New Event</span>
+                </div>
               </div>
             </Link>
           </div>

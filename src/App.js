@@ -14,6 +14,7 @@ import AdminDashboard from './pages/admin/Dashboard';
 import PendingEvents from './pages/admin/PendingEvents';
 import AllEvents from './pages/admin/AllEvents';
 import Users from './pages/admin/Users';
+import AdminEventDetailsPage from './pages/admin/AdminEventDetailsPage';
 
 // User Pages
 import UserDashboard from './pages/users/UserDashboard';
@@ -94,6 +95,14 @@ function App() {
               element={
                 <ProtectedRoute requireAdmin={true}>
                   <AllEvents />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events/:id"
+              element={
+                <ProtectedRoute requireAdmin={true}>
+                  <AdminEventDetailsPage />
                 </ProtectedRoute>
               }
             />
