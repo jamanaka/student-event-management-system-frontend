@@ -55,6 +55,11 @@ export const authService = {
     return axiosInstance.put('/auth/update-profile', data);
   },
 
+  // Change password
+  async changePassword(currentPassword: string, newPassword: string): Promise<ApiResponse> {
+    return axiosInstance.put('/auth/change-password', { currentPassword, newPassword });
+  },
+
   // Refresh token
   async refreshToken(refreshToken: string): Promise<ApiResponse<{ token: string }>> {
     return axiosInstance.post('/auth/refresh-token', { refreshToken });

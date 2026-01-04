@@ -20,6 +20,7 @@ interface AuthState {
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   updateToken: (accessToken: string) => void; // ADD THIS METHOD
   clearError: () => void;
 }
@@ -195,6 +196,27 @@ export const useAuthStore = create<AuthState>()(
           const errorMsg = error.error?.message || 'Update failed';
           set({ error: errorMsg, isLoading: false });
           toastError(errorMsg);
+        }
+      },
+
+      // Change password with API call
+      changePassword: async (currentPassword: string, newPassword: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.changePassword(currentPassword, newPassword);
+
+          if (response.success) {
+            set({ isLoading: false });
+            toastSuccess('Password changed successfully!');
+          } else {
+            set({ error: response.message || 'Password change failed', isLoading: false });
+            toastError(response.message || 'Password change failed');
+          }
+        } catch (error: any) {
+          const errorMsg = error.error?.message || 'Password change failed';
+          set({ error: errorMsg, isLoading: false });
+          toastError(errorMsg);
+          throw error;
         }
       },
 
