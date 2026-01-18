@@ -34,6 +34,7 @@ const HomeHero = () => {
             <span>University Event Management</span>
           </div>
 
+          <div>
           <h1 className="hero-title">
             Where <span className="highlight">Student Events</span>
             <br />
@@ -45,50 +46,17 @@ const HomeHero = () => {
             place. From academic seminars to cultural festivals, never miss out
             on the campus experience.
           </p>
+          </div>
 
           <div className="hero-actions">
             <button className="btn-primary" onClick={handleExploreEvents}>
-              <Calendar className="btn-icon" />
               Explore Events
             </button>
             <button className="btn-secondary" onClick={handleCreateEvent}>
-              <Users className="btn-icon" />
               Create Event
             </button>
           </div>
         </div>
-
-        {/* <div className="hero-stats">
-          <div className="stat-card">
-            <div className="stat-icon">
-              <Calendar />
-            </div>
-            <div className="stat-content">
-              <h3 className="stat-number">250+</h3>
-              <p className="stat-label">Upcoming Events</p>
-            </div>
-          </div>
-          
-          <div className="stat-card">
-            <div className="stat-icon">
-              <Users />
-            </div>
-            <div className="stat-content">
-              <h3 className="stat-number">5,000+</h3>
-              <p className="stat-label">Active Students</p>
-            </div>
-          </div>
-          
-          <div className="stat-card">
-            <div className="stat-icon">
-              <Trophy />
-            </div>
-            <div className="stat-content">
-              <h3 className="stat-number">120+</h3>
-              <p className="stat-label">Clubs & Societies</p>
-            </div>
-          </div>
-        </div> */}
 
         <div className="hero-features">
           <div className="feature">

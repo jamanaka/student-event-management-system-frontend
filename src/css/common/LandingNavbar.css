@@ -6,7 +6,8 @@
     right: 0;
     z-index: 1000;
     transition: all 0.3s ease;
-    background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+    /* background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%); */
+    background: white;
     padding: 15px 0;
     height: 70px;
     box-sizing: border-box;
@@ -41,10 +42,6 @@
     text-decoration: none;
     font-size: 1.6rem;
     font-weight: 800;
-    color: white;
-  }
-  
-  .landing-navbar.scrolled .landing-navbar-logo {
     color: #2d3436;
   }
   
@@ -106,14 +103,9 @@
   }
   
   .btn-outline {
-    border-color: white;
-    color: white;
-    background: transparent;
-  }
-  
-  .landing-navbar.scrolled .btn-outline {
-    border-color: #4a69bd;
     color: #4a69bd;
+    border-color: #4a69bd;
+    background: transparent;
   }
   
   .btn-outline:hover {
@@ -148,6 +140,7 @@
     /* Override the inline display: none */
     .mobile-hamburger[style*="display: none"] {
       display: flex !important;
+      border-radius: 4px;
     }
     
     .landing-navbar-container {

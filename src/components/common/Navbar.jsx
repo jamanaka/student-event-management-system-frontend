@@ -153,7 +153,7 @@ const Navbar = () => {
               position: "relative",
               width: "30px",
               height: "30px",
-              background: "none",
+              background: "black",
               border: "none",
               cursor: "pointer",
               padding: "5px",

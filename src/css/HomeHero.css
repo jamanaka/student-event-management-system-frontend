@@ -7,6 +7,7 @@
     justify-content: center;
     overflow: hidden;
     padding: 4rem 1rem;
+    margin-top: 40px;
     background: linear-gradient(135deg, #0f172a 0%, #161e2b 50%, #232d3b 100%);
   }
   
@@ -126,6 +127,7 @@
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 14px
   }
   
   .btn-primary,
@@ -141,6 +143,7 @@
     border: none;
     cursor: pointer;
     min-width: 200px;
+    color: black;
     justify-content: center;
   }
   
@@ -161,14 +164,13 @@
   
   .btn-secondary {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    color: white;
+    color: black;
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
   .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
+    color: black;
     border-color: rgba(255, 255, 255, 0.3);
   }
   
@@ -185,56 +187,6 @@
     margin-bottom: 4rem;
     flex-wrap: wrap;
   }
-  
-  /* .stat-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem 2rem;
-    border-radius: 16px;
-    min-width: 220px;
-    transition: all 0.3s ease;
-  }*/
-
-  /* .stat-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-4px);
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  } */
-  
-  /* .stat-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
-    border-radius: 12px;
-    color: #60a5fa;
-  } */
-  
-  /* .stat-content {
-    display: flex;
-    flex-direction: column;
-  } */
-  
-  /* .stat-number {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0;
-    line-height: 1;
-  } */
-  
-  /* .stat-label {
-    font-size: 0.875rem;
-    color: #94a3b8;
-    margin: 0.25rem 0 0 0;
-  } */
   
   /* Features Section */
   .hero-features {
@@ -337,6 +289,8 @@
     
     .hero-subtitle {
       font-size: 1.125rem;
+      text-align: center;
+      align-items: center;
     }
     
     .hero-actions {
