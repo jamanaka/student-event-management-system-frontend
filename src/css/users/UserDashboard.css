@@ -19,7 +19,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e5e7eb;
+  
   min-height: 150px;
 }
 
@@ -53,18 +53,18 @@
 .stat-card:hover {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 6px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-6px) scale(1.02);
-  border-color: rgba(99, 102, 241, 0.3);
+  
 }
 
 .stat-card.highlight {
   background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-  border: 2px solid rgba(245, 158, 11, 0.2);
+  
 }
 
 .stat-card.highlight:hover {
   box-shadow: 0 12px 24px rgba(245, 158, 11, 0.2), 0 6px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-6px) scale(1.02);
-  border-color: rgba(245, 158, 11, 0.4);
+  
   background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
 }
 
@@ -91,7 +91,7 @@
   top: 24px;
   right: 24px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border: 2px solid transparent;
+  
   z-index: 1;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -218,7 +218,7 @@
 .stat-badge.accent {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
   color: #d97706;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  
 }
 
 .stat-badge svg {
@@ -237,7 +237,7 @@
 
 .stat-card.stat-primary .stat-icon {
   background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  border-color: #93c5fd;
+  
 }
 
 .stat-card.stat-primary .icon {
@@ -250,7 +250,7 @@
 
 .stat-card.stat-success .stat-icon {
   background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  border-color: #6ee7b7;
+  
 }
 
 .stat-card.stat-success .icon {
@@ -263,7 +263,7 @@
 
 .stat-card.stat-warning .stat-icon {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border-color: #fcd34d;
+  
 }
 
 .stat-card.stat-warning .icon {
@@ -276,7 +276,7 @@
 
 .stat-card.stat-info .stat-icon {
   background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-  border-color: #c4b5fd;
+  
 }
 
 .stat-card.stat-info .icon {

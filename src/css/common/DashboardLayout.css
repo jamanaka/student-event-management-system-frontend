@@ -30,7 +30,6 @@
 
 .sidebar-header {
   padding: 12px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-logo {
@@ -69,7 +68,6 @@
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-left: 3px solid transparent;
   font-weight: 500;
   font-size: 14px;
   margin: 2px 10px;
@@ -89,7 +87,6 @@
 
 .sidebar-nav-link.active {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
-  border-left-color: white;
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   font-weight: 600;
@@ -106,7 +103,6 @@
 }
 
 .sidebar-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 0;
 }
 
@@ -125,7 +121,6 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 10px 20px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -162,7 +157,6 @@
   padding: 10px 16px;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 12px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .user-info svg {

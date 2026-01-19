@@ -228,7 +228,7 @@
     border-radius: 12px;
     padding: 8px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    
   }
   
   .newsletter-title {
@@ -356,7 +356,7 @@
     border-radius: 20px;
     font-size: 0.8rem;
     color: #d1d8e0;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    
     transition: all 0.3s ease;
   }
   

@@ -95,16 +95,14 @@
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid transparent;
     cursor: pointer;
     font-size: 0.95rem;
     display: inline-block;
     font-family: inherit;
   }
-  
+
   .btn-outline {
     color: #4a69bd;
-    border-color: #4a69bd;
     background: transparent;
   }
   

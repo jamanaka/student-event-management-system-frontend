@@ -4,9 +4,9 @@ import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import './LoginPage.css';
 
-const ForgotPasswordPage = () => { 
+const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const { isLoading } = useAuthStore();
+  const { isLoading, requestPasswordReset, resetPassword } = useAuthStore();
   const [email, setEmail] = useState('');
   const [step, setStep] = useState(1); // 1: Email input, 2: OTP verification, 3: New password
   const [otpCode, setOtpCode] = useState('');
@@ -18,7 +18,7 @@ const ForgotPasswordPage = () => {
   const handleRequestReset = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!email.trim()) {
       setError('Email is required');
       return;
@@ -30,8 +30,8 @@ const ForgotPasswordPage = () => {
     }
 
     try {
-      // TODO: Implement password reset request
-      setMessage('Password reset instructions have been sent to your email.');
+      await requestPasswordReset(email);
+      setMessage('Password reset OTP sent to your email.');
       setStep(2);
     } catch (err) {
       setError('Failed to send reset email. Please try again.');
@@ -41,24 +41,21 @@ const ForgotPasswordPage = () => {
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!otpCode || otpCode.length !== 6) {
       setError('Please enter a valid 6-digit OTP code');
       return;
-    } 
-
-    try {
-      // TODO: Implement OTP verification
-      setStep(3);
-    } catch (err) {
-      setError('Invalid OTP code. Please try again.');
     }
+
+    // For now, we'll just proceed to the password reset step
+    // The actual OTP verification will happen during password reset
+    setStep(3);
   };
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!newPassword || newPassword.length < 6) {
       setError('Password must be at least 6 characters');
       return;
@@ -70,7 +67,7 @@ const ForgotPasswordPage = () => {
     }
 
     try {
-      // TODO: Implement password reset
+      await resetPassword(email, otpCode, newPassword);
       setMessage('Password reset successfully! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');

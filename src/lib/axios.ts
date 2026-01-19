@@ -45,17 +45,22 @@ axiosInstance.interceptors.response.use(
         return axiosInstance
           .post('/auth/refresh-token', { refreshToken })
           .then((response) => {
-            const { token } = response.data.data;
+            if (response.data.success && response.data.data?.token) {
+              const { token } = response.data.data;
 
-            // Update store with new token
-            useAuthStore.getState().updateToken(token);
+              // Update store with new token
+              useAuthStore.getState().updateToken(token);
 
-            // Retry original request with new token
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axiosInstance(originalRequest);
+              // Retry original request with new token
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              return axiosInstance(originalRequest);
+            } else {
+              throw new Error('Invalid refresh response');
+            }
           })
           .catch((refreshError) => {
             // Refresh failed, logout user
+            console.error('Token refresh failed:', refreshError);
             useAuthStore.getState().logout();
             window.location.href = '/login';
             return Promise.reject(refreshError);

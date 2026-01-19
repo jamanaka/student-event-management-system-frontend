@@ -32,7 +32,6 @@
 .form-header {
   margin-bottom: 16px;
   padding-bottom: 24px; 
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .form-header h1 {
@@ -66,7 +65,6 @@
   color: #1f2937;
   margin: 0 0 8px 0;
   padding-bottom: 12px;
-  border-bottom: 2px solid #e5e7eb;
 }
 
 .form-row {
@@ -96,7 +94,6 @@
 .form-textarea {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
@@ -108,14 +105,12 @@
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .form-input.error,
 .form-select.error,
 .form-textarea.error {
-  border-color: #ef4444;
 }
 
 .form-textarea {
@@ -140,7 +135,6 @@
   gap: 16px;
   justify-content: flex-end;
   padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
 }
 
 .btn-cancel,

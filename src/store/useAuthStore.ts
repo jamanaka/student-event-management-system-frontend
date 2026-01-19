@@ -17,6 +17,8 @@ interface AuthState {
   register: (data: RegisterFormData) => Promise<ApiResponse>;
   verifyOTP: (email: string, otpCode: string) => Promise<void>;
   resendOTP: (email: string) => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  resetPassword: (email: string, otpCode: string, newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
@@ -214,6 +216,48 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error: any) {
           const errorMsg = error.error?.message || 'Password change failed';
+          set({ error: errorMsg, isLoading: false });
+          toastError(errorMsg);
+          throw error;
+        }
+      },
+
+      // Request password reset
+      requestPasswordReset: async (email: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.requestPasswordReset(email);
+
+          if (response.success) {
+            set({ isLoading: false });
+            toastSuccess('Password reset OTP sent to your email!');
+          } else {
+            set({ error: response.message || 'Failed to send reset email', isLoading: false });
+            toastError(response.message || 'Failed to send reset email');
+          }
+        } catch (error: any) {
+          const errorMsg = error.error?.message || 'Failed to send reset email';
+          set({ error: errorMsg, isLoading: false });
+          toastError(errorMsg);
+          throw error;
+        }
+      },
+
+      // Reset password
+      resetPassword: async (email: string, otpCode: string, newPassword: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.resetPassword(email, otpCode, newPassword);
+
+          if (response.success) {
+            set({ isLoading: false });
+            toastSuccess('Password reset successfully!');
+          } else {
+            set({ error: response.message || 'Password reset failed', isLoading: false });
+            toastError(response.message || 'Password reset failed');
+          }
+        } catch (error: any) {
+          const errorMsg = error.error?.message || 'Password reset failed';
           set({ error: errorMsg, isLoading: false });
           toastError(errorMsg);
           throw error;

@@ -48,7 +48,7 @@
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  
 }
 
 .admin-quick-action-btn:hover {
@@ -73,7 +73,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e5e7eb;
+  
   min-height: 180px;
 }
 
@@ -96,7 +96,7 @@
 .admin-stat-card:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px) scale(1.01);
-  border-color: #cbd5e1;
+  
 }
 
 .admin-stat-icon {
@@ -112,7 +112,7 @@
   top: 24px;
   right: 24px;
   background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  
   z-index: 1;
 }
 
@@ -166,7 +166,7 @@
 
 .admin-stat-primary .admin-stat-icon {
   background: #dbeafe;
-  border-color: #bfdbfe;
+  
 }
 
 .admin-stat-primary .admin-icon {
@@ -179,7 +179,7 @@
 
 .admin-stat-warning .admin-stat-icon {
   background: #fef3c7;
-  border-color: #fde68a;
+  
 }
 
 /* .admin-stat-warning .admin-icon {
@@ -192,7 +192,7 @@
 
 .admin-stat-success .admin-stat-icon {
   background: #d1fae5;
-  border-color: #a7f3d0;
+  
 }
 
 .admin-stat-success .admin-icon {
@@ -205,7 +205,7 @@
 
 .admin-stat-info .admin-stat-icon {
   background: #ede9fe;
-  border-color: #ddd6fe;
+  
 }
 
 .admin-stat-info .admin-icon {
@@ -226,7 +226,7 @@
   margin-top: 16px;
   flex-wrap: wrap;
   padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  
 }
 
 .admin-stat-detail-item {
@@ -264,7 +264,7 @@
   background: #667eea;
   border-radius: 8px;
   transition: all 0.3s ease;
-  border: 1px solid #667eea;
+  
   width: fit-content;
 }
 
@@ -287,7 +287,7 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  
   transition: all 0.2s ease;
 }
 
@@ -302,7 +302,7 @@
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  
 }
 
 .admin-secondary-stat-label {
@@ -419,7 +419,7 @@
   gap: 8px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
+  
 }
 
 .admin-btn-approve,

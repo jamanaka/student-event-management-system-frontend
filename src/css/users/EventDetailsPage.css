@@ -216,7 +216,7 @@
 
 .event-contact {
   padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
+  
 }
 
 .event-contact h3 {
@@ -371,17 +371,17 @@
 .form-textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  transition: border-color 0.2s ease;
+  
 }
 
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #667eea;
+  
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
