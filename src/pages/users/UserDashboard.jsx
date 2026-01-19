@@ -34,7 +34,7 @@ const UserDashboard = () => {
     fetchEvents({ limit: 6, status: 'approved', sort: 'date', upcoming: true });
     fetchUserEvents('all');
     fetchUserRSVPs({ status: 'upcoming' });
-  }, []);
+  }, [fetchEvents, fetchUserEvents, fetchUserRSVPs]);
 
   useEffect(() => {
     const upcoming = events.filter(event => {

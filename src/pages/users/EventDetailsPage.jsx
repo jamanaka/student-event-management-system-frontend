@@ -56,13 +56,13 @@ const EventDetailsPage = () => {
     if (id) {
       fetchEventById(id);
     }
-  }, [id]);
+  }, [id, fetchEventById]);
 
   useEffect(() => {
     if (selectedEvent && isAuthenticated) {
       checkRSVP();
     }
-  }, [selectedEvent, isAuthenticated]);
+  }, [selectedEvent, isAuthenticated, checkRSVP]);
 
   const checkRSVP = async () => {
     if (selectedEvent && isAuthenticated) {

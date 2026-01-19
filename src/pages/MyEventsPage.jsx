@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusCircle, Filter, Calendar, CheckCircle, Clock, XCircle, TrendingUp, Users, Sparkles, AlertCircle } from 'lucide-react';
+import { PlusCircle, Filter, Calendar, CheckCircle, Clock, XCircle, TrendingUp, Sparkles, AlertCircle } from 'lucide-react';
 import { FaClipboardList, FaHourglassHalf, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import DashboardLayout from '../components/common/DashboardLayout';
 import EventCard from '../components/common/EventCard';

@@ -45,7 +45,7 @@ const RegisterPage = () => {
   useEffect(() => {
     clearError();
     setLocalError('');
-  }, []);
+  }, [clearError]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

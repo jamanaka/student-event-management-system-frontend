@@ -49,7 +49,7 @@ const AdminDashboard = () => {
       ]);
     };
     loadDashboardData();
-  }, []);
+  }, [fetchPendingEvents, fetchEvents, fetchSystemStats]);
 
 
   const handleApprove = async (eventId) => {

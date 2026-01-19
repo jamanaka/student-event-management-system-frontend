@@ -32,7 +32,7 @@ const AdminEventDetailsPage = () => {
     if (id) {
       fetchEventById(id);
     }
-  }, [id]);
+  }, [id, fetchEventById]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

@@ -29,7 +29,7 @@ const AllEvents = () => {
       params.status = undefined;
     }
     fetchEvents(params);
-  }, [filters]);
+  }, [filters, fetchEvents]);
 
   const categories = [
     { value: '', label: 'All Categories' },

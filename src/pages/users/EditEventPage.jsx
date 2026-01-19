@@ -42,7 +42,7 @@ const EditEventPage = () => {
     if (id) {
       fetchEventById(id);
     }
-  }, [id]);
+  }, [id, fetchEventById]);
 
   useEffect(() => {
     if (selectedEvent) {

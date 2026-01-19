@@ -22,7 +22,7 @@ const PendingEvents = () => {
 
   useEffect(() => {
     fetchPendingEvents();
-  }, []);
+  }, [fetchPendingEvents]);
 
   const handleApprove = async (eventId) => {
     const success = await approveEvent(eventId);
