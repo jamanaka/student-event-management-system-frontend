@@ -31,6 +31,11 @@ export interface SystemStats {
     usersRegistered: number;
     period: string;
   };
+  todayActivity: {
+    eventsApproved: number;
+    eventsRejected: number;
+    rsvpsMade: number;
+  };
 }
 
 export interface UserWithStats extends User {

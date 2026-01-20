@@ -69,25 +69,15 @@ const PendingEvents = () => {
 
             <div className="admin-events-grid">
               {pendingEvents.map((event) => (
-                <div key={event._id} className="admin-pending-event-card-wrapper">
-                  <EventCard event={event} showStatus={true} adminView={true} />
-                  <div className="admin-pending-actions">
-                    <button
-                      onClick={() => handleApprove(event._id)}
-                      className="admin-btn-approve"
-                    >
-                      <CheckCircle size={18} />
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleRejectClick(event)}
-                      className="admin-btn-reject"
-                    >
-                      <XCircle size={18} />
-                      Reject
-                    </button>
-                  </div>
-                </div>
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  showStatus={true}
+                  adminView={true}
+                  showAdminActions={true}
+                  onApprove={handleApprove}
+                  onReject={handleRejectClick}
+                />
               ))}
             </div>
           </>

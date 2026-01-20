@@ -74,7 +74,8 @@ const AdminDashboard = () => {
     users: { total: 0, active: 0, inactive: 0, byRole: [] },
     events: { total: 0, approved: 0, pending: 0, upcoming: 0, byCategory: [] },
     rsvps: { total: 0 },
-    recentActivity: { eventsCreated: 0, usersRegistered: 0, period: '7 days' }
+    recentActivity: { eventsCreated: 0, usersRegistered: 0, period: '7 days' },
+    todayActivity: { eventsApproved: 0, eventsRejected: 0, rsvpsMade: 0 }
   };
 
   return (
@@ -177,17 +178,21 @@ const AdminDashboard = () => {
           <div className="admin-secondary-stats-grid">
             <div className="admin-secondary-stat-card">
               <div className="admin-secondary-stat-header">
-                <span className="admin-secondary-stat-label">Recent Activity</span>
-                <Activity size={16} color="#64748b" />
+                <span className="admin-secondary-stat-label">Admin Actions Needed</span>
+                <Activity size={16} color="#f59e0b" />
               </div>
               <div className="admin-secondary-stat-content">
                 <div className="admin-secondary-stat-item">
-                  <span>Events Created (7 days)</span>
-                  <span className="admin-secondary-stat-value">{stats.recentActivity.eventsCreated}</span>
+                  <span>Pending Approval</span>
+                  <span className="admin-secondary-stat-value admin-urgent">{stats.events.pending}</span>
                 </div>
                 <div className="admin-secondary-stat-item">
-                  <span>New Users (7 days)</span>
-                  <span className="admin-secondary-stat-value">{stats.recentActivity.usersRegistered}</span>
+                  <span>Approved Today</span>
+                  <span className="admin-secondary-stat-value admin-positive">{stats.todayActivity.eventsApproved}</span>
+                </div>
+                <div className="admin-secondary-stat-item">
+                  <span>New RSVPs Today</span>
+                  <span className="admin-secondary-stat-value">{stats.todayActivity.rsvpsMade}</span>
                 </div>
               </div>
             </div>
@@ -257,27 +262,15 @@ const AdminDashboard = () => {
             ) : (
               <div className="admin-events-grid">
                 {pendingEvents.slice(0, 3).map((event) => (
-                  <div key={event._id} className="admin-pending-event-wrapper">
-                    <EventCard event={event} showStatus={true} adminView={true} />
-                    <div className="admin-pending-actions">
-                      <button
-                        onClick={() => handleApprove(event._id)}
-                        className="admin-btn-approve"
-                        disabled={loading}
-                      >
-                        <CheckCircle size={18} />
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleReject(event._id)}
-                        className="admin-btn-reject"
-                        disabled={loading}
-                      >
-                        <AlertCircle size={18} />
-                        Reject
-                      </button>
-                    </div>
-                  </div>
+                  <EventCard
+                    key={event._id}
+                    event={event}
+                    showStatus={true}
+                    adminView={true}
+                    showAdminActions={true}
+                    onApprove={handleApprove}
+                    onReject={handleReject}
+                  />
                 ))}
               </div>
             )}

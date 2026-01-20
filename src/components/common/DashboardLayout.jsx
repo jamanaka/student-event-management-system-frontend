@@ -27,12 +27,13 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
     navigate('/login');
   };
 
-  const sidebarLinks = isAdmin 
+  const sidebarLinks = isAdmin
     ? [
         { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/admin/events', label: 'All Events', icon: Calendar },
         { path: '/admin/pending', label: 'Pending Events', icon: Bell },
         { path: '/admin/users', label: 'Users', icon: Users },
+        { path: '/admin/profile', label: 'Profile', icon: User },
       ]
     : [
         { path: '/users/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -40,6 +41,7 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
         { path: '/events/my-events', label: 'My Events', icon: Calendar },
         { path: '/events/my-rsvps', label: 'My RSVPs', icon: Users },
         { path: '/events/create', label: 'Create Event', icon: PlusCircle },
+        { path: '/profile', label: 'Profile', icon: User },
       ];
 
   return (
@@ -80,14 +82,14 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
         </nav>
 
         <div className="sidebar-footer">
-          <Link 
+          {/* <Link 
             to="/profile" 
             className="sidebar-nav-link"
             onClick={() => setSidebarOpen(false)}
           >
             <Settings size={20} />
             <span>Settings</span>
-          </Link>
+          </Link> */}
           <button 
             className="sidebar-nav-link logout-btn"
             onClick={handleLogout}

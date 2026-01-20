@@ -4,9 +4,10 @@ import { Calendar, MapPin, Users, Clock, CheckCircle, Image, XCircle, PlayCircle
 import { useRSVPStore } from '../../store/useRSVPStore';
 import { useAuthStore, useIsAdmin } from '../../store/useAuthStore';
 import { useEventStore } from '../../store/useEventStore';
+import { AlertCircle } from 'lucide-react';
 import '../../css/users/EventCard.css';
 
-const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false, adminView = false, showCancelRSVP = false, onCancelRSVP, numberOfGuests = 0 }) => {
+const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = true, onEventUpdate, skipRSVPCheck = false, adminView = false, showCancelRSVP = false, onCancelRSVP, numberOfGuests = 0, showAdminActions = false, onApprove, onReject }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const isAdmin = useIsAdmin();
@@ -369,6 +370,34 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
                   View Details
                 </Link>
               </>
+            )}
+
+            {/* Admin Actions - Only show for admins when event is pending */}
+            {isAdmin && event.status === 'pending' && showAdminActions && (
+              <div className="admin-card-actions">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onApprove?.(event._id);
+                  }}
+                  className="admin-btn-approve"
+                  disabled={rsvpLoading}
+                >
+                  <CheckCircle size={16} />
+                  Approve
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReject?.(event._id);
+                  }}
+                  className="admin-btn-reject"
+                  disabled={rsvpLoading}
+                >
+                  <AlertCircle size={16} />
+                  Reject
+                </button>
+              </div>
             )}
           </div>
         )}

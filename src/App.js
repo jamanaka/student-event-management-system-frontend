@@ -15,6 +15,7 @@ import PendingEvents from './pages/admin/PendingEvents';
 import AllEvents from './pages/admin/AllEvents';
 import Users from './pages/admin/Users';
 import AdminEventDetailsPage from './pages/admin/AdminEventDetailsPage';
+import AdminProfilePage from './pages/admin/AdminProfilePage';
 
 // User Pages
 import UserDashboard from './pages/users/UserDashboard';
@@ -114,6 +115,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/profile"
+              element={
+                <ProtectedRoute requireAdmin={true}>
+                  <AdminProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected User Routes - Regular users only */}
             <Route
@@ -157,11 +166,11 @@ function App() {
               }
             />
 
-            {/* Profile - Accessible by all authenticated users */}
+            {/* User Profile - Regular users only */}
             <Route
               path="/profile"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <ProfilePage />
                 </ProtectedRoute>
               }

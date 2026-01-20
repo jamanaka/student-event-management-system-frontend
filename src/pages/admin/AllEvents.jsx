@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
-import Spinner from '../../components/common/Spinner';
+import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { useEventStore } from '../../store/useEventStore';
 import '../../css/admin/AllEvents.css';
 
@@ -17,7 +17,7 @@ const AllEvents = () => {
     search: '',
     category: '',
     status: '',
-    sort: 'date',
+    sort: 'newest',
   });
 
   useEffect(() => {
@@ -107,16 +107,17 @@ const AllEvents = () => {
                 onChange={(e) => handleFilterChange('sort', e.target.value)}
                 className="admin-filter-select"
               >
+                <option value="newest">Newest First</option>
                 <option value="date">Date (Soonest)</option>
-                <option value="-date">Date (Latest)</option>
-                <option value="title">Title (A-Z)</option>
+                <option value="dateDesc">Date (Latest)</option>
+                <option value="popular">Most Popular</option>
               </select>
             </div>
           </div>
         </div>
 
         {loading ? (
-          <Spinner />
+          <SkeletonLoader type="card" count={8} />
         ) : events.length > 0 ? (
           <div className="admin-events-grid">
             {events.map((event) => (
