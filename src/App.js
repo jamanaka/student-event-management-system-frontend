@@ -115,11 +115,11 @@ function App() {
               }
             />
 
-            {/* Protected User Routes */}
+            {/* Protected User Routes - Regular users only */}
             <Route
               path="/users/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <UserDashboard />
                 </ProtectedRoute>
               }
@@ -127,7 +127,7 @@ function App() {
             <Route
               path="/events/create"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <CreateEventPage />
                 </ProtectedRoute>
               }
@@ -135,7 +135,7 @@ function App() {
             <Route
               path="/events/:id/edit"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <EditEventPage />
                 </ProtectedRoute>
               }
@@ -143,7 +143,7 @@ function App() {
             <Route
               path="/events/my-events"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <MyEventsPage />
                 </ProtectedRoute>
               }
@@ -151,11 +151,13 @@ function App() {
             <Route
               path="/events/my-rsvps"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireUser={true}>
                   <MyRSVPsPage />
                 </ProtectedRoute>
               }
             />
+
+            {/* Profile - Accessible by all authenticated users */}
             <Route
               path="/profile"
               element={
