@@ -218,8 +218,15 @@ const EventDetailsPage = () => {
               <div className="info-item">
                 <Calendar className="info-icon" size={20} />
                 <div>
-                  <span className="info-label">Date</span>
-                  <span className="info-value">{formatDate(selectedEvent.date)}</span>
+                  <span className="info-label">
+                    {selectedEvent.endDate && selectedEvent.endDate !== selectedEvent.date ? 'Date Range' : 'Date'}
+                  </span>
+                  <span className="info-value">
+                    {selectedEvent.endDate && selectedEvent.endDate !== selectedEvent.date
+                      ? `${formatDate(selectedEvent.date)} - ${formatDate(selectedEvent.endDate)}`
+                      : formatDate(selectedEvent.date)
+                    }
+                  </span>
                 </div>
               </div>
 
@@ -227,18 +234,41 @@ const EventDetailsPage = () => {
                 <div className="info-item">
                   <Clock className="info-icon" size={20} />
                   <div>
-                    <span className="info-label">Time</span>
-                    <span className="info-value">{formatTime(selectedEvent.time)}</span>
+                    <span className="info-label">
+                      {selectedEvent.endTime && selectedEvent.endTime !== selectedEvent.time ? 'Time Range' : 'Time'}
+                    </span>
+                    <span className="info-value">
+                      {selectedEvent.endTime && selectedEvent.endTime !== selectedEvent.time
+                        ? `${formatTime(selectedEvent.time)} - ${formatTime(selectedEvent.endTime)}`
+                        : formatTime(selectedEvent.time)
+                      }
+                    </span>
                   </div>
                 </div>
               )}
 
               <div className="info-item">
-                <MapPin className="info-icon" size={20} />
-                <div>
-                  <span className="info-label">Location</span>
-                  <span className="info-value">{selectedEvent.location}</span>
-                </div>
+                {selectedEvent.isOnline ? (
+                  <>
+                    <div style={{color: '#10b981'}} className="info-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="info-label">Event Type</span>
+                      <span className="info-value" style={{color: '#10b981', fontWeight: '600'}}>Online Event</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <MapPin className="info-icon" size={20} />
+                    <div>
+                      <span className="info-label">Location</span>
+                      <span className="info-value">{selectedEvent.location}</span>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="info-item">

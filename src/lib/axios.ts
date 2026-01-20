@@ -9,10 +9,10 @@ export const axiosInstance = axios.create({
       ? "http://localhost:5000/api"
       : `${process.env.REACT_APP_API_BASE_URL_PROD}/api`,
   withCredentials: true,
-  timeout: 30000,
+  timeout: 45000, // Increased timeout to 45 seconds for production email delays
   headers: {
     'Content-Type': 'application/json',
-  }, 
+  },
 });
 
 // Request interceptor - Add token to every request

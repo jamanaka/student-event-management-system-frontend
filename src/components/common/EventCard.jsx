@@ -256,19 +256,38 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
         <div className="event-card-info">
           <div className="event-info-item">
             <Calendar className="info-icon" size={16} />
-            <span>{formatDate(event.date)}</span>
+            <span>
+              {event.endDate && event.endDate !== event.date
+                ? `${formatDate(event.date)} - ${formatDate(event.endDate)}`
+                : formatDate(event.date)
+              }
+            </span>
           </div>
-          
+
           {event.time && (
             <div className="event-info-item">
               <Clock className="info-icon" size={16} />
-              <span>{formatTime(event.time)}</span>
+              <span>
+                {event.endTime && event.endTime !== event.time && event.endDate === event.endDate
+                  ? `${formatTime(event.time)} - ${formatTime(event.endTime)}`
+                  : formatTime(event.time)
+                }
+              </span>
             </div>
           )}
 
           <div className="event-info-item">
-            <MapPin className="info-icon" size={16} />
-            <span>{event.location}</span>
+            {event.isOnline ? (
+              <>
+                <PlayCircle className="info-icon" size={16} />
+                <span>Online Event</span>
+              </>
+            ) : (
+              <>
+                <MapPin className="info-icon" size={16} />
+                <span>{event.location}</span>
+              </>
+            )}
           </div>
 
           <div className="event-info-item">

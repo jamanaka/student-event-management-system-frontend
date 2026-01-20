@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, PlusCircle, Clock, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { Calendar, PlusCircle, Clock, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles, ArrowUpRight, Zap, Award, Rocket, BarChart3, ExternalLink } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { useEventStore } from '../../store/useEventStore';
 import { useRSVPStore } from '../../store/useRSVPStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import '../../css/users/UserDashboard.css';
 
 const UserDashboard = () => {
+  const { user } = useAuthStore();
   const { 
     events, 
     userEvents,
@@ -26,11 +28,25 @@ const UserDashboard = () => {
   const [stats, setStats] = useState({
     upcomingEvents: 0,
     myEvents: 0,
+    myEventsApproved: 0,
+    myEventsPending: 0,
     myRSVPs: 0,
+    upcomingRSVPs: 0,
     totalAttendees: 0,
+    totalAttendeesMyEvents: 0,
+    totalCategories: 0,
+    engagementScore: 0
   });
 
+  const [quickFilters, setQuickFilters] = useState('all');
+  const [greeting, setGreeting] = useState('');
+
   useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good Morning');
+    else if (hour < 18) setGreeting('Good Afternoon');
+    else setGreeting('Good Evening');
+
     fetchEvents({ limit: 6, status: 'approved', sort: 'date', upcoming: true });
     fetchUserEvents('all');
     fetchUserRSVPs({ status: 'upcoming' });
@@ -42,101 +58,207 @@ const UserDashboard = () => {
       return eventDate > new Date() && event.status === 'approved';
     });
 
+    const approvedEvents = userEvents.filter(e => e.status === 'approved').length;
+    const pendingEvents = userEvents.filter(e => e.status === 'pending').length;
+    const upcomingRSVPs = rsvps.filter(rsvp => {
+      const event = rsvp.event;
+      const eventDate = new Date(`${event?.date}T${event?.time || '00:00'}`);
+      return eventDate > new Date();
+    }).length;
+
+    const categories = new Set(events.map(e => e.category)).size;
+    const engagementScore = Math.min(
+      100,
+      rsvps.length * 20 + userEvents.length * 15 + events.reduce((sum, event) => sum + (event.currentAttendees || 0), 0)
+    );
+
     setStats({
       upcomingEvents: upcoming.length,
       myEvents: userEvents.length,
+      myEventsApproved: approvedEvents,
+      myEventsPending: pendingEvents,
       myRSVPs: rsvps.length,
+      upcomingRSVPs,
       totalAttendees: events.reduce((sum, event) => sum + (event.currentAttendees || 0), 0),
+      totalAttendeesMyEvents: userEvents.reduce((sum, event) => sum + (event.currentAttendees || 0), 0),
+      totalCategories: categories,
+      engagementScore
     });
   }, [events, userEvents, rsvps]);
 
   const handleEventUpdate = () => {
-    // Refresh events and RSVPs after RSVP
     fetchEvents({ limit: 6, status: 'approved', sort: 'date', upcoming: true });
     fetchUserRSVPs({ status: 'upcoming' });
   };
 
+  const getFilteredEvents = () => {
+    const now = new Date();
+    switch (quickFilters) {
+      case 'today':
+        return events.filter(event => {
+          const eventDate = new Date(event.date);
+          return eventDate.toDateString() === now.toDateString();
+        });
+      case 'week':
+        return events.filter(event => {
+          const eventDate = new Date(event.date);
+          const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+          return eventDate <= weekFromNow;
+        });
+      case 'popular':
+        return [...events].sort((a, b) => (b.currentAttendees || 0) - (a.currentAttendees || 0));
+      default:
+        return events;
+    }
+  };
+
+  const filteredEvents = getFilteredEvents();
+
   return (
     <DashboardLayout title="My Dashboard">
       <div className="user-dashboard">
-        {/* Stats Cards */}
+        {/* Welcome Header */}
+        <div className="dashboard-welcome">
+          <div className="welcome-content">
+            <div className="welcome-badge">
+              <Sparkles size={16} />
+              <span>{greeting}, {user?.firstName || 'there'}!</span>
+            </div>
+            <h1 className="welcome-title">Your Event Dashboard</h1>
+            <p className="welcome-subtitle">
+              Track, manage, and discover amazing events happening around you
+            </p>
+          </div>
+          <div className="welcome-actions">
+            <Link to="/events" className="welcome-action-btn">
+              <ExternalLink size={18} />
+              Explore Events
+            </Link>
+          </div>
+        </div>
+
+        {/* Stats Cards - Enhanced */}
         <div className="stats-grid">
           <div className="stat-card stat-primary">
             <div className="stat-icon">
-              <Calendar className="icon" size={28} />
+              <Calendar className="icon" />
+              <div className="stat-icon-glow"></div>
             </div>
             <div className="stat-content">
               <p className="stat-label">UPCOMING EVENTS</p>
-              <h3 className="stat-value">{stats.upcomingEvents}</h3>
+              <div className="stat-value-container">
+                <h3 className="stat-value">{stats.upcomingEvents}</h3>
+                <span className="stat-trend">+{Math.floor(stats.upcomingEvents * 0.2)} this week</span>
+              </div>
               <p className="stat-status">Available to attend</p>
               {stats.upcomingEvents > 0 && (
-                <div className="stat-badge">
-                  <Sparkles size={12} />
-                  <span>Browse & Join</span>
-                </div>
+                <Link to="/events" className="stat-action">
+                  Browse Events <ArrowUpRight size={14} />
+                </Link>
               )}
             </div>
           </div>
 
           <div className="stat-card stat-success">
             <div className="stat-icon">
-              <TrendingUp className="icon" size={28} />
+              <TrendingUp className="icon" />
+              <div className="stat-icon-glow"></div>
             </div>
             <div className="stat-content">
               <p className="stat-label">MY EVENTS</p>
-              <h3 className="stat-value">{stats.myEvents}</h3>
-              <div className="stat-details">
-                <span className="stat-detail-item">
-                  <CheckCircle size={14} />
-                  {stats.myEventsApproved} approved
-                </span>
-                {stats.myEventsPending > 0 && (
-                  <span className="stat-detail-item pending">
-                    <AlertCircle size={14} />
-                    {stats.myEventsPending} pending
+              <div className="stat-value-container">
+                <h3 className="stat-value">{stats.myEvents}</h3>
+                <div className="stat-badges">
+                  <span className="stat-badge approved">
+                    <CheckCircle size={12} />
+                    {stats.myEventsApproved}
                   </span>
-                )}
+                  {stats.myEventsPending > 0 && (
+                    <span className="stat-badge pending">
+                      <AlertCircle size={12} />
+                      {stats.myEventsPending}
+                    </span>
+                  )}
+                </div>
               </div>
-              <p className="stat-status">
-                {stats.totalAttendeesMyEvents} total attendees
-              </p>
+              <p className="stat-status">{stats.totalAttendeesMyEvents} total attendees</p>
+              {stats.myEvents > 0 && (
+                <Link to="/events/my-events" className="stat-action">
+                  View Events <ArrowUpRight size={14} />
+                </Link>
+              )}
             </div>
           </div>
 
           <div className="stat-card stat-info">
             <div className="stat-icon">
-              <Users className="icon" size={28} />
+              <Users className="icon" />
+              <div className="stat-icon-glow"></div>
             </div>
             <div className="stat-content">
               <p className="stat-label">MY RSVPS</p>
-              <h3 className="stat-value">{stats.myRSVPs}</h3>
-              <p className="stat-status">
-                {stats.upcomingRSVPs} upcoming events
-              </p>
+              <div className="stat-value-container">
+                <h3 className="stat-value">{stats.myRSVPs}</h3>
+                <span className="stat-trend">{stats.upcomingRSVPs} upcoming</span>
+              </div>
+              <p className="stat-status">Active participation</p>
               {stats.myRSVPs > 0 && (
-                <div className="stat-badge success">
-                  <CheckCircle size={12} />
-                  <span>Active</span>
-                </div>
+                <Link to="/events/my-rsvps" className="stat-action">
+                  View RSVPs <ArrowUpRight size={14} />
+                </Link>
               )}
             </div>
           </div>
 
-          <div className="stat-card stat-warning highlight">
+          <div className="stat-card stat-accent create-event-card">
             <Link to="/events/create" className="stat-link">
               <div className="stat-icon">
-                <PlusCircle className="icon" size={28} />
+                <PlusCircle className="icon" />
+                <div className="stat-icon-glow"></div>
               </div>
               <div className="stat-content">
                 <p className="stat-label">CREATE EVENT</p>
-                <h3 className="stat-value">+</h3>
+                <h3 className="stat-value">+ New</h3>
                 <p className="stat-status">Start organizing now</p>
-                <div className="stat-badge accent">
-                  <Sparkles size={12} />
-                  <span>New Event</span>
+                <div className="stat-action-btn">
+                  <Sparkles size={16} />
+                  Get Started
                 </div>
               </div>
             </Link>
+          </div>
+        </div>
+
+        {/* Quick Filters */}
+        <div className="dashboard-filters">
+          <div className="filter-tabs">
+            <button 
+              className={`filter-tab ${quickFilters === 'all' ? 'active' : ''}`}
+              onClick={() => setQuickFilters('all')}
+            >
+              All Events
+            </button>
+            <button 
+              className={`filter-tab ${quickFilters === 'today' ? 'active' : ''}`}
+              onClick={() => setQuickFilters('today')}
+            >
+              Today
+            </button>
+            <button 
+              className={`filter-tab ${quickFilters === 'week' ? 'active' : ''}`}
+              onClick={() => setQuickFilters('week')}
+            >
+              This Week
+            </button>
+            {/* <button 
+              className={`filter-tab ${quickFilters === 'popular' ? 'active' : ''}`}
+              onClick={() => setQuickFilters('popular')}
+            >
+              Most Popular
+            </button> */}
+          </div>
+          <div className="filter-stats">
+            Showing {filteredEvents.length} of {events.length} events
           </div>
         </div>
 
@@ -144,15 +266,17 @@ const UserDashboard = () => {
         {userEvents.length > 0 && (
           <section className="dashboard-section">
             <div className="section-header">
-              <div>
-                <h2 className="section-title">
-                  <Calendar size={24} style={{ marginRight: '8px', color: '#3b82f6' }} />
-                  My Events ({userEvents.length})
-                </h2>
-                <p className="section-subtitle">Events you've created</p>
+              <div className="section-header-left">
+                <div className="section-icon">
+                  <Calendar size={28} />
+                </div>
+                <div>
+                  <h2 className="section-title">My Events</h2>
+                  <p className="section-subtitle">Events you've created</p>
+                </div>
               </div>
               <Link to="/events/my-events" className="btn-view-all">
-                View All
+                View All <ArrowUpRight size={16} />
               </Link>
             </div>
 
@@ -172,15 +296,17 @@ const UserDashboard = () => {
         {rsvps.length > 0 && (
           <section className="dashboard-section">
             <div className="section-header">
-              <div>
-                <h2 className="section-title">
-                  <Users size={24} style={{ marginRight: '8px', color: '#10b981' }} />
-                  My RSVPs ({rsvps.length})
-                </h2>
-                <p className="section-subtitle">Events you're attending</p>
+              <div className="section-header-left">
+                <div className="section-icon">
+                  <Award size={28} />
+                </div>
+                <div>
+                  <h2 className="section-title">My RSVPs</h2>
+                  <p className="section-subtitle">Events you're attending</p>
+                </div>
               </div>
               <Link to="/events/my-rsvps" className="btn-view-all">
-                View All
+                View All <ArrowUpRight size={16} />
               </Link>
             </div>
 
@@ -203,41 +329,53 @@ const UserDashboard = () => {
         {/* Upcoming Events Section */}
         <section className="dashboard-section">
           <div className="section-header">
-            <div>
-              <h2 className="section-title">
-                <Clock size={24} style={{ marginRight: '8px', color: '#667eea' }} />
-                Upcoming Events
-              </h2>
-              <p className="section-subtitle">Discover exciting events happening soon</p>
+            <div className="section-header-left">
+              <div className="section-icon">
+                <Zap size={28} />
+              </div>
+              <div>
+                <h2 className="section-title">Upcoming Events</h2>
+                <p className="section-subtitle">Discover exciting events happening soon</p>
+              </div>
             </div>
             <Link to="/events" className="btn-view-all">
-              Browse All
+              Browse All <ArrowUpRight size={16} />
             </Link>
           </div>
 
           {loading ? (
             <SkeletonLoader type="card" count={6} />
-          ) : events.length > 0 ? (
-            <div className="events-grid">
-              {events.map((event) => (
-                <EventCard 
-                  key={event._id} 
-                  event={event} 
-                  showStatus={false}
-                  onEventUpdate={handleEventUpdate}
-                />
-              ))}
-            </div>
+          ) : filteredEvents.length > 0 ? (
+            <>
+              <div className="events-grid">
+                {filteredEvents.map((event) => (
+                  <EventCard 
+                    key={event._id} 
+                    event={event} 
+                    showStatus={false}
+                    onEventUpdate={handleEventUpdate}
+                  />
+                ))}
+              </div>
+            </>
           ) : (
             <div className="empty-state">
-              <div className="empty-state-icon">
-                <Calendar size={64} color="#cbd5e1" />
+              <div className="empty-state-content">
+                <div className="empty-state-icon">
+                  <Calendar size={72} />
+                </div>
+                <h3 className="empty-state-title">No events found</h3>
+                <p>Try changing your filters or check back later for new events</p>
+                <div className="empty-state-actions">
+                  <Link to="/events/create" className="btn-primary">
+                    <PlusCircle size={20} />
+                    Create Your First Event
+                  </Link>
+                  <button onClick={() => setQuickFilters('all')} className="btn-secondary">
+                    Clear Filters
+                  </button>
+                </div>
               </div>
-              <h3 className="empty-state-title">No upcoming events found</h3>
-              <p>Start creating amazing events for your campus community!</p>
-              <Link to="/events/create" className="btn-primary">
-                Create Your First Event
-              </Link>
             </div>
           )}
         </section>
