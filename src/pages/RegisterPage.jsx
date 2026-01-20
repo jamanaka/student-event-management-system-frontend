@@ -190,18 +190,16 @@ const RegisterPage = () => {
 
       const response = await register(registrationData);
 
+      // The register function already handles success/error states in the store
+      // We only need to proceed to OTP step on success
       if (response && response.success) {
         setOtpData((prev) => ({
           ...prev,
           email: formData.email.trim().toLowerCase(),
         }));
         setStep(2);
-      } else {
-        // If response exists but not successful, error is already set by store
-        if (response && !response.success) {
-          setLocalError(response.message || 'Registration failed');
-        }
       }
+      // Errors are automatically handled by the store and displayed via error state
     } catch (err) {
       // Error is handled by the store, but we can also set local error
       console.error('Registration catch error:', err);
