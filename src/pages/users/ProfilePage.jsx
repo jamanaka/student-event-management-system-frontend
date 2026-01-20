@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Mail, GraduationCap, Calendar, Save, Lock, Eye, EyeOff, X } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import { useAuthStore } from '../../store/useAuthStore';
-import '../../css/users/ProfilePage.css';
+import '../../css/admin/ProfilePage.css';
 
 const ProfilePage = () => {
   const { user, updateProfile, changePassword, isLoading } = useAuthStore();

@@ -3,7 +3,7 @@ import { User, Mail, Shield, Calendar, Edit2, Save, X } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { toast } from 'react-hot-toast';
 import DashboardLayout from '../../components/common/DashboardLayout';
-import '../../css/users/ProfilePage.css';
+import '../../css/admin/ProfilePage.css';
 
 const AdminProfilePage = () => {
   const { user, updateProfile, isLoading } = useAuthStore();
@@ -65,7 +65,7 @@ const AdminProfilePage = () => {
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout isAdmin={true}>
       <div className="profile-page">
         <div className="profile-header">
           <div className="profile-avatar">

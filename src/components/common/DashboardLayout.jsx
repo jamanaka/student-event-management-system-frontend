@@ -82,14 +82,6 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
         </nav>
 
         <div className="sidebar-footer">
-          {/* <Link 
-            to="/profile" 
-            className="sidebar-nav-link"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <Settings size={20} />
-            <span>Settings</span>
-          </Link> */}
           <button 
             className="sidebar-nav-link logout-btn"
             onClick={handleLogout}
