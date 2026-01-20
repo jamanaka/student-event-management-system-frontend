@@ -71,7 +71,14 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/events" element={<EventsPage />} />
+            <Route
+              path="/events"
+              element={
+                <ProtectedRoute requireUser={true}>
+                  <EventsPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/events/:id" element={<EventDetailsPage />} />
 
             {/* Protected Admin Routes */}
