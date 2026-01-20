@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Calendar, 
-  PlusCircle, 
-  Users, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Calendar,
+  PlusCircle,
+  Users,
   LogOut,
   Menu,
   X,

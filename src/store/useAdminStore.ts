@@ -29,6 +29,7 @@ interface AdminState {
 }
 
 export const useAdminStore = create<AdminState>((set, get) => ({
+  // Ensure initial state has proper types
   users: [],
   selectedUser: null,
   systemStats: null,

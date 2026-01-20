@@ -22,10 +22,10 @@ import '../../css/admin/Users.css';
 
 const Users = () => {
   const { user: currentUser } = useAuthStore();
-  const { 
-    users, 
+  const {
+    users,
     selectedUser,
-    loading, 
+    loading,
     pagination,
     fetchAllUsers,
     fetchUserById,
@@ -34,8 +34,14 @@ const Users = () => {
     deleteUser
   } = useAdminStore();
 
-  // Ensure users is always an array
+  // Ensure users is always an array and pagination is always an object
   const safeUsers = Array.isArray(users) ? users : [];
+  const safePagination = pagination && typeof pagination === 'object' ? pagination : {
+    total: 0,
+    totalPages: 1,
+    currentPage: 1,
+    count: 0,
+  };
 
   const [filters, setFilters] = useState({
     search: '',
@@ -158,7 +164,7 @@ const Users = () => {
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= pagination.totalPages) {
+    if (newPage >= 1 && newPage <= safePagination.totalPages) {
       setFilters(prev => ({ ...prev, page: newPage }));
     }
   };
@@ -213,7 +219,7 @@ const Users = () => {
           <div className="admin-results-count">
             {loading ? 'Loading...' : (
               <>
-                Showing {pagination.count} of {pagination.total} users
+                Showing {safePagination.count} of {safePagination.total} users
                 {filters.search && ` matching "${filters.search}"`}
               </>
             )}
@@ -335,22 +341,22 @@ const Users = () => {
             </div>
 
             {/* Pagination */}
-            {pagination.totalPages > 1 && (
+            {safePagination.totalPages > 1 && (
               <div className="admin-pagination">
                 <button
-                  onClick={() => handlePageChange(pagination.currentPage - 1)}
-                  disabled={pagination.currentPage === 1}
+                  onClick={() => handlePageChange(safePagination.currentPage - 1)}
+                  disabled={safePagination.currentPage === 1}
                   className="admin-pagination-btn"
                 >
                   <ChevronLeft size={18} />
                   Previous
                 </button>
                 <div className="admin-pagination-info">
-                  Page {pagination.currentPage} of {pagination.totalPages}
+                  Page {safePagination.currentPage} of {safePagination.totalPages}
                 </div>
                 <button
-                  onClick={() => handlePageChange(pagination.currentPage + 1)}
-                  disabled={pagination.currentPage === pagination.totalPages}
+                  onClick={() => handlePageChange(safePagination.currentPage + 1)}
+                  disabled={safePagination.currentPage === safePagination.totalPages}
                   className="admin-pagination-btn"
                 >
                   Next

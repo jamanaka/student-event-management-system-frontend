@@ -41,7 +41,7 @@ const HomeHero = () => {
             Come to <span className="highlight">Life</span>
           </h1>
 
-          <p className="hero-subtitle">
+          <p className="hero-paragraph">
             Discover, organize, and participate in campus events all in one
             place. From academic seminars to cultural festivals, never miss out
             on the campus experience.

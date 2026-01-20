@@ -34,8 +34,27 @@ axiosInstance.interceptors.response.use(
   (error: CustomAxiosError) => {
     const originalRequest = (error as any)?.config;
 
+    // Create consistent error format early
+    const errorData: BackendErrorResponse = error.response?.data || {
+      success: false,
+      error: {
+        message: error.message || 'Network error occurred',
+        code: 'NETWORK_ERROR',
+      },
+    };
+
     // Handle 401 Unauthorized (token expired)
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      // Don't retry login requests - let them fail naturally
+      if (originalRequest.url?.includes('/auth/login') ||
+          originalRequest.url?.includes('/auth/register') ||
+          originalRequest.url?.includes('/auth/verify-otp') ||
+          originalRequest.url?.includes('/auth/resend-otp') ||
+          originalRequest.url?.includes('/auth/request-password-reset') ||
+          originalRequest.url?.includes('/auth/reset-password')) {
+        return Promise.reject(errorData);
+      }
+
       originalRequest._retry = true;
 
       // Try to refresh token
@@ -62,12 +81,14 @@ axiosInstance.interceptors.response.use(
             // Refresh failed, logout user
             console.error('Token refresh failed:', refreshError);
             useAuthStore.getState().logout();
+            // Use window.location for full page redirect after logout
             window.location.href = '/login';
             return Promise.reject(refreshError);
           });
       } else {
         // No refresh token, logout
         useAuthStore.getState().logout();
+        // Use window.location for full page redirect after logout
         window.location.href = '/login';
       }
     }
@@ -86,15 +107,6 @@ axiosInstance.interceptors.response.use(
         }, 2000);
       }
     }
-
-    // Return consistent error format
-    const errorData: BackendErrorResponse = error.response?.data || {
-      success: false,
-      error: {
-        message: error.message || 'Network error occurred',
-        code: 'NETWORK_ERROR',
-      },
-    };
 
     return Promise.reject(errorData);
   }
