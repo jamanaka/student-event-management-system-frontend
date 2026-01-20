@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -52,6 +52,14 @@ const EventDetailsPage = () => {
     dietaryPreferences: '',
   });
 
+  const checkRSVP = useCallback(async () => {
+    if (selectedEvent && isAuthenticated) {
+      const result = await checkRSVPStatus(selectedEvent._id);
+      setHasRSVPed(result.hasRSVPed);
+      setRsvpStatus(result.rsvp);
+    }
+  }, [selectedEvent, isAuthenticated, checkRSVPStatus]);
+
   useEffect(() => {
     if (id) {
       fetchEventById(id);
@@ -63,14 +71,6 @@ const EventDetailsPage = () => {
       checkRSVP();
     }
   }, [selectedEvent, isAuthenticated, checkRSVP]);
-
-  const checkRSVP = async () => {
-    if (selectedEvent && isAuthenticated) {
-      const result = await checkRSVPStatus(selectedEvent._id);
-      setHasRSVPed(result.hasRSVPed);
-      setRsvpStatus(result.rsvp);
-    }
-  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
