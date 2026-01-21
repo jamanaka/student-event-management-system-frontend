@@ -137,7 +137,16 @@ const MyEventsPage = () => {
 
     // Status filter
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(event => event.status === statusFilter);
+      if (statusFilter === 'past') {
+        // Special case for past events - show events that have already occurred
+        const now = new Date();
+        filtered = filtered.filter(event => {
+          const eventDate = new Date(`${event.date}T${event.time || '00:00'}`);
+          return eventDate < now;
+        });
+      } else {
+        filtered = filtered.filter(event => event.status === statusFilter);
+      }
     }
 
     // Search filter

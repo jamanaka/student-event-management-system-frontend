@@ -268,7 +268,7 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
             <div className="event-info-item">
               <Clock className="info-icon" size={16} />
               <span>
-                {event.endTime && event.endTime !== event.time && event.endDate === event.endDate
+                {event.endTime && event.endTime !== event.time
                   ? `${formatTime(event.time)} - ${formatTime(event.endTime)}`
                   : formatTime(event.time)
                 }
@@ -278,10 +278,31 @@ const EventCard = ({ event, showActions = false, onDelete, onEdit, showStatus = 
 
           <div className="event-info-item">
             {event.isOnline ? (
-              <>
-                <PlayCircle className="info-icon" size={16} />
-                <span>Online Event</span>
-              </>
+              isPastEvent ? (
+                // Show meeting URL only for past online events
+                event.location && event.location.startsWith('http') ? (
+                  <a
+                    href={event.location}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="meeting-link"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <PlayCircle className="info-icon" size={16} />
+                    <span>Join Meeting</span>
+                  </a>
+                ) : (
+                  <>
+                    <PlayCircle className="info-icon" size={16} />
+                    <span>Online Event</span>
+                  </>
+                )
+              ) : (
+                <>
+                  <PlayCircle className="info-icon" size={16} />
+                  <span>Online Event</span>
+                </>
+              )
             ) : (
               <>
                 <MapPin className="info-icon" size={16} />

@@ -387,6 +387,12 @@
   box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
 }
 
+.my-events-stat-past .my-events-stat-mini-icon {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.3);
+}
+
 /* Search and Filters Bar */
 .my-events-filters-bar {
   display: flex;

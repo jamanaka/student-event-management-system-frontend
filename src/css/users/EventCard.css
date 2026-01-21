@@ -114,6 +114,36 @@
   color: inherit;
 }
 
+.meeting-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.meeting-link:hover {
+  color: #059669;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+}
+
+.meeting-link .info-icon {
+  color: #10b981;
+}
+
+.meeting-link:hover .info-icon {
+  color: #059669;
+}
+
 .event-card-title {
   font-size: 20px;
   font-weight: 700;
@@ -234,6 +264,31 @@
 
 .event-card-join-btn.joined:hover:not(:disabled) {
   background-color: #2563eb;
+}
+
+.event-card-join-meeting-btn {
+  flex: 1;
+  padding: 10px 16px;
+  text-align: center;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.event-card-join-meeting-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 .event-card-past-label,
