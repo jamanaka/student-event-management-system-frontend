@@ -1,0 +1,342 @@
+   .date-range-picker {
+    position: relative;
+    width: 100%;
+  }
+  
+  .date-input-group {
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .date-input-group:focus-within {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+    box-shadow: 
+      0 0 0 4px rgba(102, 126, 234, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+  
+  .date-input-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .date-input-group:focus-within::before {
+    opacity: 1;
+  }
+  
+  .date-input-group svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .date-input-group:focus-within svg {
+    color: #667eea;
+    transform: scale(1.1);
+  }
+  
+  .date-input {
+    flex: 1;
+    min-width: 120px;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1e293b;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .date-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+  }
+  
+  .date-input:hover {
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 6px;
+  }
+  
+  .date-input:focus {
+    background: rgba(248, 250, 252, 0.8);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  }
+  
+  .date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    transition: all 0.2s ease;
+  }
+  
+  .date-input::-webkit-calendar-picker-indicator:hover {
+    background: #e2e8f0;
+    transform: scale(1.1);
+  }
+  
+  .date-separator {
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 4px;
+    user-select: none;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .date-input-group:focus-within .date-separator {
+    color: #667eea;
+    transform: scale(1.1);
+  }
+  
+  /* Date Range Preview */
+  .date-range-preview {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e6eeff 100%);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #475569;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: slideDown 0.3s ease;
+  }
+  
+  .date-range-preview::before {
+    content: '📅';
+    font-size: 12px;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Clear Button */
+  .date-clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 6px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  
+  .date-clear-btn:hover {
+    background: #e2e8f0;
+    color: #64748b;
+    transform: scale(1.1);
+  }
+  
+  /* Custom Calendar Styling */
+  .date-input::-webkit-datetime-edit-fields-wrapper {
+    padding: 2px;
+  }
+  
+  .date-input::-webkit-datetime-edit-text {
+    color: #64748b;
+    padding: 0 2px;
+  }
+  
+  .date-input::-webkit-datetime-edit-month-field,
+  .date-input::-webkit-datetime-edit-day-field,
+  .date-input::-webkit-datetime-edit-year-field {
+    color: #1e293b;
+    font-weight: 500;
+  }
+  
+  .date-input::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  /* Dark Mode Support */
+  @media (prefers-color-scheme: dark) {
+    .date-input-group {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-color: #334155;
+    }
+    
+    .date-input-group:focus-within {
+      background: linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%);
+      border-color: #667eea;
+      box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .date-input {
+      color: #f1f5f9;
+      background: transparent;
+    }
+    
+    .date-input::placeholder {
+      color: #94a3b8;
+    }
+    
+    .date-input:hover {
+      background: rgba(30, 41, 59, 0.5);
+    }
+    
+    .date-input:focus {
+      background: rgba(30, 41, 59, 0.8);
+    }
+    
+    .date-input::-webkit-calendar-picker-indicator {
+      background: #334155;
+      filter: invert(1) brightness(0.8);
+    }
+    
+    .date-input::-webkit-calendar-picker-indicator:hover {
+      background: #475569;
+    }
+    
+    .date-input::-webkit-datetime-edit-text {
+      color: #94a3b8;
+    }
+    
+    .date-input::-webkit-datetime-edit-month-field,
+    .date-input::-webkit-datetime-edit-day-field,
+    .date-input::-webkit-datetime-edit-year-field {
+      color: #f1f5f9;
+    }
+    
+    .date-clear-btn {
+      background: #334155;
+      color: #94a3b8;
+    }
+    
+    .date-clear-btn:hover {
+      background: #475569;
+      color: #cbd5e1;
+    }
+    
+    .date-range-preview {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #cbd5e1;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .date-input-group {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 16px;
+    }
+    
+    .date-input-group svg {
+      align-self: flex-start;
+    }
+    
+    .date-separator {
+      align-self: center;
+      padding: 4px 0;
+    }
+    
+    .date-input {
+      width: 100%;
+      padding: 10px 12px;
+    }
+  }
+  
+  /* Animation for Value Changes */
+  .date-input {
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .date-input:not(:placeholder-shown) {
+    background: rgba(102, 126, 234, 0.05);
+  }
+  
+  /* Accessibility Improvements */
+  .date-input-group:focus-within {
+    outline: 2px solid transparent;
+  }
+  
+  .date-input:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+  }
+  
+  /* Disabled State */
+  .date-input-group.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f1f5f9;
+  }
+  
+  .date-input-group.disabled .date-input {
+    cursor: not-allowed;
+  }
+  
+  /* Validation States */
+  .date-input-group.valid {
+    border-color: #10b981;
+  }
+  
+  .date-input-group.valid::before {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  }
+  
+  .date-input-group.invalid {
+    border-color: #ef4444;
+  }
+  
+  .date-input-group.invalid::before {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+  }
+  
+  /* Compact Variant */
+  .date-range-picker.compact .date-input-group {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .date-range-picker.compact .date-input {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+  
+  .date-range-picker.compact .date-separator {
+    font-size: 13px;
+  }
+  
+  /* With Clear Button Variant */
+  .date-range-picker.with-clear .date-input-group {
+    padding-right: 12px;
+  }

@@ -25,7 +25,7 @@ import EventsPage from './pages/users/EventsPage';
 import EventDetailsPage from './pages/users/EventDetailsPage';
 import CreateEventPage from './pages/users/CreateEventPage';
 import EditEventPage from './pages/users/EditEventPage';
-import MyEventsPage from './pages/MyEventsPage';
+import MyEventsPage from './pages/users/MyEventsPage';
 import MyRSVPsPage from './pages/users/MyRSVPsPage';
 
 // Profile Page
