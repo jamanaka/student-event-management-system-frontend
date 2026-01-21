@@ -25,6 +25,12 @@ interface EventState {
     currentPage: number;
     count: number;
   };
+  stats: {
+    totalEvents: number;
+    upcomingEvents: number;
+    todayEvents: number;
+    categories: number;
+  };
 
   // Actions with API calls
   fetchEvents: (filters?: EventFilters) => Promise<void>;
@@ -47,6 +53,12 @@ export const useEventStore = create<EventState>((set, get) => ({
   userEvents: [],
   loading: false,
   error: null,
+  stats: {
+    totalEvents: 0,
+    upcomingEvents: 0,
+    todayEvents: 0,
+    categories: 0,
+  },
   filters: {
     page: 1,
     limit: 9,
@@ -95,7 +107,13 @@ export const useEventStore = create<EventState>((set, get) => ({
           set({
             events: Array.isArray(eventsData) ? eventsData : [],
             loading: false,
-            pagination: paginationData
+            pagination: paginationData,
+            stats: response.stats || {
+              totalEvents: 0,
+              upcomingEvents: 0,
+              todayEvents: 0,
+              categories: 0,
+            }
           });
         } else {
           set({ error: response.message || 'Failed to fetch events', loading: false });

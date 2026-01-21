@@ -1,3 +1,11 @@
+// Event Stats
+export interface EventStats {
+  totalEvents: number;
+  upcomingEvents: number;
+  todayEvents: number;
+  categories: number;
+}
+
 // Base API Response
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -7,6 +15,7 @@ export interface ApiResponse<T = any> {
   total?: number;
   totalPages?: number;
   currentPage?: number;
+  stats?: EventStats;
 }
 
 // Error Response
@@ -52,10 +61,10 @@ export interface Event {
   description: string;
   date: string;
   time: string;
-  endDate: string;
-  endTime: string;
+  endDate?: string;
+  endTime?: string;
   location: string;
-  category: 'academic' | 'social' | 'sports' | 'cultural' | 'career' | 'workshop' | 'other';
+  category: 'academic' | 'social' | 'sports' | 'cultural' | 'career' | 'workshop' | 'music' | 'arts' | 'science' | 'other';
   status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'completed';
   capacity: number;
   currentAttendees: number;
@@ -63,6 +72,8 @@ export interface Event {
   contactEmail: string;
   contactPhone?: string;
   imageUrl?: string;
+  isOnline?: boolean;
+  tags?: string;
   rejectionReason?: string;
   isFeatured?: boolean;
   createdAt: string;
