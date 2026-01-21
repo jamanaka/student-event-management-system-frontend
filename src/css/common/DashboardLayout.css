@@ -8,7 +8,6 @@
 /* Sidebar */
 .dashboard-sidebar {
   width: 250px;
-  /* background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%); */
   background: #101726;
   color: white;
   display: flex;
@@ -163,8 +162,8 @@
   color: #6366f1;
 }
 
-.user-name {
-  font-size: 15px;
+.dashboard-user-name {
+  font-size: 16px;
   color: #1e293b;
 }
 

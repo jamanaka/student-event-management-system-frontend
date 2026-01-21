@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Search,
   Filter,
@@ -11,15 +11,12 @@ import {
   Sparkles,
   TrendingUp,
   Clock,
-  SlidersHorizontal,
   Users,
   Star,
-  ChevronDown,
   ChevronUp,
   Zap,
   Target,
   RefreshCw,
-  Eye,
   EyeOff,
 } from "lucide-react";
 import {
@@ -49,7 +46,7 @@ import "../../css/users/EventsPage.css";
 const EventsPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore(); // eslint-disable-line no-unused-vars
   const { rsvps } = useRSVPStore();
   const {
     events,
@@ -75,11 +72,9 @@ const EventsPage = () => {
     tags: searchParams.get("tags") ? searchParams.get("tags").split(",") : [],
   });
 
-  const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState(localFilters.search);
   const [viewMode, setViewMode] = useState("grid");
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showTrendingEvents, setShowTrendingEvents] = useState(true);
   const [featuredEvent, setFeaturedEvent] = useState(null);
   const [selectedTags, setSelectedTags] = useState(localFilters.tags || []);
@@ -171,7 +166,7 @@ const EventsPage = () => {
     },
   ];
 
-  const popularTags = [
+  const popularTags = [ // eslint-disable-line no-unused-vars
     "Free",
     "Food Provided",
     "Beginner-Friendly",
@@ -227,7 +222,7 @@ const EventsPage = () => {
     };
   }, [events, eventStats, rsvps]);
 
-  const sortOptions = [
+  const sortOptions = [ // eslint-disable-line no-unused-vars
     { value: "date", label: "Date (Soonest)", icon: Calendar },
     { value: "-date", label: "Date (Latest)", icon: Calendar },
     { value: "title", label: "Title (A-Z)", icon: Star },
@@ -357,14 +352,14 @@ const EventsPage = () => {
     });
   };
 
-  const quickFilters = [
+  const quickFilters = [ // eslint-disable-line no-unused-vars
     { label: "Today", key: "today", icon: Calendar },
     { label: "This Week", key: "week", icon: Clock },
     { label: "Free Events", key: "free", icon: Star },
     { label: "Online", key: "online", icon: MapPin },
   ];
 
-  const handleQuickFilter = (key) => {
+  const handleQuickFilter = (key) => { // eslint-disable-line no-unused-vars
     const now = new Date();
     switch (key) {
       case "today":

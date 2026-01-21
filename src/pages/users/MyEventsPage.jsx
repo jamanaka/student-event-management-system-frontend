@@ -14,7 +14,6 @@ import {
   ChevronDown,
   RefreshCw,
   Download,
-  Eye,
   BarChart3,
   Users,
   ChevronRight,

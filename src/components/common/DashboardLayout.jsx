@@ -99,7 +99,7 @@ const DashboardLayout = ({ children, title, isAdmin = false }) => {
           <div className="dashboard-header-actions">
             <div className="user-info">
               <User size={20} />
-              <span className="user-name">
+              <span className="dashboard-user-name">
                 {user?.firstName} {user?.lastName}
               </span>
               {user?.role === 'admin' && (

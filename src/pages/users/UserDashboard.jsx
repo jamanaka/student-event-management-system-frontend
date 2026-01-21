@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, PlusCircle, Clock, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles, ArrowUpRight, Zap, Award, Rocket, BarChart3, ExternalLink } from 'lucide-react';
+import { Calendar, PlusCircle, Users, TrendingUp, CheckCircle, AlertCircle, Sparkles, ArrowUpRight, Zap, Award, ExternalLink } from 'lucide-react';
 import DashboardLayout from '../../components/common/DashboardLayout';
 import EventCard from '../../components/common/EventCard';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
