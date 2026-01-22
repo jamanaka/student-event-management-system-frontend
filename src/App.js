@@ -13,7 +13,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AdminDashboard from './pages/admin/Dashboard';
 import PendingEvents from './pages/admin/PendingEvents';
 import AllEvents from './pages/admin/AllEvents';
-import Users from './pages/admin/Users';
+import User from './pages/admin/Users';
 import AdminEventDetailsPage from './pages/admin/AdminEventDetailsPage';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
 
@@ -118,7 +118,7 @@ function App() {
               path="/admin/users"
               element={
                 <ProtectedRoute requireAdmin={true}>
-                  <Users />
+                  <User />
                 </ProtectedRoute>
               }
             />

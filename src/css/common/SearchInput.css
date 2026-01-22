@@ -1,0 +1,27 @@
+/* SearchInput.css - Minimalist version */
+.search-input-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 8px 8px 8px 35px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  .search-input:focus {
+    outline: 2px solid #007bff;
+    outline-offset: -1px;
+  }

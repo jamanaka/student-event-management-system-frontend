@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search } from 'lucide-react';
+import '../../css/common/SearchInput.css';
 
 const SearchInput = ({ value, onChange, placeholder = "Search...", className = "" }) => {
   return (
