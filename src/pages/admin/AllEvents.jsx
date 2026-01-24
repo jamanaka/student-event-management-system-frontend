@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
-import DashboardLayout from '../../components/common/DashboardLayout';
-import EventCard from '../../components/common/EventCard';
-import SkeletonLoader from '../../components/common/SkeletonLoader';
-import { useEventStore } from '../../store/useEventStore';
-import '../../css/admin/AllEvents.css';
+import React, { useEffect, useState } from "react";
+import { Search } from "lucide-react";
+import DashboardLayout from "../../components/common/DashboardLayout";
+import EventCard from "../../components/common/EventCard";
+import SkeletonLoader from "../../components/common/SkeletonLoader";
+import { useEventStore } from "../../store/useEventStore";
+import "../../css/admin/AllEvents.css";
 
 const AllEvents = () => {
-  const { 
-    events, 
-    loading, 
-    fetchEvents 
-  } = useEventStore();
+  const { events, loading, fetchEvents } = useEventStore();
 
   const [filters, setFilters] = useState({
-    search: '',
-    category: '',
-    status: '',
-    sort: 'newest',
+    search: "",
+    category: "",
+    status: "",
+    sort: "newest",
   });
 
   useEffect(() => {
@@ -32,26 +28,26 @@ const AllEvents = () => {
   }, [filters, fetchEvents]);
 
   const categories = [
-    { value: '', label: 'All Categories' },
-    { value: 'academic', label: 'Academic' },
-    { value: 'social', label: 'Social' },
-    { value: 'sports', label: 'Sports' },
-    { value: 'cultural', label: 'Cultural' },
-    { value: 'career', label: 'Career' },
-    { value: 'workshop', label: 'Workshop' },
-    { value: 'other', label: 'Other' },
+    { value: "", label: "All Categories" },
+    { value: "academic", label: "Academic" },
+    { value: "social", label: "Social" },
+    { value: "sports", label: "Sports" },
+    { value: "cultural", label: "Cultural" },
+    { value: "career", label: "Career" },
+    { value: "workshop", label: "Workshop" },
+    { value: "other", label: "Other" },
   ];
 
   const statusOptions = [
-    { value: '', label: 'All Statuses' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'approved', label: 'Approved' },
-    { value: 'rejected', label: 'Rejected' },
-    { value: 'cancelled', label: 'Cancelled' },
+    { value: "", label: "All Statuses" },
+    { value: "pending", label: "Pending" },
+    { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
+    { value: "cancelled", label: "Cancelled" },
   ];
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -64,7 +60,7 @@ const AllEvents = () => {
               type="text"
               placeholder="Search events..."
               value={filters.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
+              onChange={(e) => handleFilterChange("search", e.target.value)}
               className="admin-search-input"
             />
           </div>
@@ -74,10 +70,10 @@ const AllEvents = () => {
               <label>Category</label>
               <select
                 value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
+                onChange={(e) => handleFilterChange("category", e.target.value)}
                 className="admin-filter-select"
               >
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <option key={cat.value} value={cat.value}>
                     {cat.label}
                   </option>
@@ -89,10 +85,10 @@ const AllEvents = () => {
               <label>Status</label>
               <select
                 value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
+                onChange={(e) => handleFilterChange("status", e.target.value)}
                 className="admin-filter-select"
               >
-                {statusOptions.map(opt => (
+                {statusOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
@@ -104,7 +100,7 @@ const AllEvents = () => {
               <label>Sort By</label>
               <select
                 value={filters.sort}
-                onChange={(e) => handleFilterChange('sort', e.target.value)}
+                onChange={(e) => handleFilterChange("sort", e.target.value)}
                 className="admin-filter-select"
               >
                 <option value="newest">Newest First</option>
@@ -121,7 +117,12 @@ const AllEvents = () => {
         ) : events.length > 0 ? (
           <div className="admin-events-grid">
             {events.map((event) => (
-              <EventCard key={event._id} event={event} showStatus={true} adminView={true} />
+              <EventCard
+                key={event._id}
+                event={event}
+                showStatus={true}
+                adminView={true}
+              />
             ))}
           </div>
         ) : (
@@ -135,4 +136,3 @@ const AllEvents = () => {
 };
 
 export default AllEvents;
-

@@ -92,11 +92,11 @@ const LoginPage = () => {
             <p>Sign in to your account to continue</p>
           </div>
 
-          {(error || localError) && (
+          {/* {(error || localError) && (
             <div className="auth-error">
               {error || localError}
             </div>
-          )}
+          )} */}
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
